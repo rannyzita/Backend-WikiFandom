@@ -11,8 +11,8 @@ exports.up = function(knex) {
         table.string("email", 45).notNullable().unique();
         table.string("senha", 45).notNullable();
         table.string("foto_perfil", 100);
-        table.date("data_criacao");
         table.text("biografia");
+        table.date("data_criacao").defaultTo(knex.fn.now());
     });
 };
 
