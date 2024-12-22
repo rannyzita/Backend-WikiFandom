@@ -6,10 +6,10 @@ const { v4: uuidv4 } = require('uuid');
 exports.up = function(knex) {
     return knex.schema.createTable("Noticia", function(table) {
         table.uuid("id").primary().defaultTo(uuidv4());
-        table.date("data_envio").defaultTo(knex.fn.now());
+        table.datetime("data_envio").defaultTo(knex.fn.now());
         table.string("titulo", 45).notNullable();
         table.text("conteudo", 300).notNullable();
-        table.text("url_noticia", 300).notNullable();
+        table.text("url_noticia", 500).notNullable();
     });
 };
 

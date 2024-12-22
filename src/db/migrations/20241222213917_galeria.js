@@ -6,7 +6,8 @@ const { v4: uuidv4 } = require('uuid');
 exports.up = function(knex) {
     return knex.schema.createTable("Galeria", function(table) {//+
         table.uuid("id").primary().defaultTo(uuidv4());
-        table.date("data_envio").defaultTo(knex.fn.now());
+        table.datetime("data_envio").defaultTo(knex.fn.now());
+	    table.text("descricao", 100);
         table.uuid("id_imagem").notNullable()
         .references("id").inTable("Imagem")
         // deleta os registros dependentes

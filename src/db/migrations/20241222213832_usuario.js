@@ -12,7 +12,7 @@ exports.up = function(knex) {
         table.string("senha", 45).notNullable();
         table.string("foto_perfil", 100);
         table.text("biografia");
-        table.date("data_criacao").defaultTo(knex.fn.now());
+        table.datetime("data_criacao").defaultTo(knex.fn.now());
     });
 };
 

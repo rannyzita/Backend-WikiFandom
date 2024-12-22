@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 exports.up = function(knex) {
     return knex.schema.createTable("Favorito", function(table) {
         table.uuid("id").primary().defaultTo(uuidv4());
-        table.date("data_envio").defaultTo(knex.fn.now());
+        table.datetime("data_envio").defaultTo(knex.fn.now());
         table.uuid("id_post").notNullable()
         .references("id").inTable("Post")
         // deleta os registros dependentes

@@ -4,10 +4,13 @@ const { v4: uuidv4 } = require('uuid');
  * @returns { Promise<void> }
  */
 exports.up = function(knex) {
-    return knex.schema.alterTable("Post", function(table) {
-        table.dropColumn("url_post");
-        table.uuid("id_imagem")
-        .references("id").inTable("Imagem")
+    return knex.schema.createTable("Historico_Pesquisa", function(table) {
+        table.uuid("id").primary().defaultTo(uuidv4());
+        table.string("termo_buscado", 100);
+        table.datetime("data_busca").defaultTo(knex.fn.now());
+        // chave primária
+        table.uuid("id_usuario").notNullable()
+        .references("id").inTable("Usuario")
         // deleta os registros dependentes
         .onDelete("CASCADE")
         // atualiza os registros dependentes
@@ -20,5 +23,5 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-    return knex.schema.dropTable("Post");
+    return knex.schema.dropTable("Historico_Pesquisa");
 };
