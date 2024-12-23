@@ -1,3 +1,6 @@
+// conexao com os dados do banco de dados
+const knex = require('../db/connection.js');
+
 class UsuarioRepository {
     static async findAll() {
         return await knex("Usuario").select();

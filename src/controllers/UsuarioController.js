@@ -1,4 +1,4 @@
-const UsuarioRepository = require('../models/UsuarioRepository');
+const UsuarioRepository = require('../models/UsuarioRepository.js');
 
 class UsuarioController {
   // Método para listar todos os usuários
