@@ -18,7 +18,7 @@ static async getUsuarioById(req, res) {
         if (usuario) {
             res.json(usuario);
         } else {
-            res.status(404).json({ message: 'Usuário não encontrado' });
+            res.status(404).json({ message: 'User not found' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -43,7 +43,7 @@ static async updateUsuario(req, res) {
         if (updatedUsuario) {
             res.json(updatedUsuario);
         } else {
-            res.status(404).json({ message: 'Usuário não encontrado' });
+            res.status(404).json({ message: 'User not found' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -59,7 +59,7 @@ static async deleteUsuario(req, res) {
             // mas sem retorno de algo
             res.status(204).end();
         } else {
-            res.status(404).json({ message: 'Usuário não encontrado' });
+            res.status(404).json({ message: 'User not found' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
