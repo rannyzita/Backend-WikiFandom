@@ -40,9 +40,17 @@ module.exports = {
                 return res.status(401).json({message: 'Credenciais inválidas'})
             }
 
-            const token = jwt.sing
+            const token = jwt.sign(
+                {id: usuario.id},
+                process.env.JWT_SECRET || 'sua_chave',
+                {expiresIn: '8h'}
+            );
+
+            return res.json({ token });
+        } catch (error){
+            return res.status(500).json({ message: 'Erro ao realizar seu login', error});
         }
-    }
-}
+    },
+};
 
     
