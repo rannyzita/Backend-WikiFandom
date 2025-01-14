@@ -1,28 +1,32 @@
-const bcrypt = require('bcrypt'); // hash de senhas
-const jwt = require('jsonwebtoken'); // tokens JWT
-const knex = require('../db/knex'); // banco de dados que foi configurado com knex
+const bcrypt = require('bcrypt'); // hash de senhas, em resumo importa um método para criptografar senhas
+const jwt = require('jsonwebtoken'); // tokens JWT (validar acesso do usuário)
+const knex = require('../db/knex'); // importa o banco de dados que foi configurado com knex
 
+// registrando um usuário novo
 module.exports = {
-    // registrar um novo usuário
+    // registra um novo usuário
     async registro (req, res){
         const {nome, email, senha} = req.body;
 
-        //verificando se todos os campos obrigatório foram preenchidos
         if (!nome || !email || !senha){
             return res.status(400).json({message: 'Todos campos são obrigatórios!'});
         }
 
         try{
-            const hashedSenha = await bcrypt.hash(senha, 8);
+            const usuarioExiste = await UsuarioRepository.findByEmail(email);
+            if (usuarioExiste) {
+                return res.status(400).json({ message: 'Usuário já existe.' });
+            }
 
+            const senha = await bcrypt.hash(senha, 8);
             await knex('Usuario').insert({
+                nome,
                 email,
-                senha: hashedSenha,
-                nome: nome,
+                senha: senha
             })
             return res.status(201).json({message: 'Usuário registrado.'});
-        } catch(error){
-            return res.status(500).json({message: 'Erro ao registrar usuário.', error});
+        } catch(erro){
+            return res.status(500).json({message: 'Erro ao registrar usuário.', erro});
         }
     },
 
@@ -34,21 +38,25 @@ module.exports = {
         }
 
         try{
-            const usuario = await knex('Usuario').where({ email }).first();
-
+            const usuario = await UsuarioRepository.findByEmail(email);
             if (!usuario || !(await bcrypt.compare(senha, usuario.senha))){
                 return res.status(401).json({message: 'Credenciais inválidas'})
             }
 
+            const secreto = process.env.JWT_SECRET;
+            if (!secret) {
+                throw new Error("JWT_SECRET não está configurado.");
+            }
+
             const token = jwt.sign(
                 {id: usuario.id},
-                process.env.JWT_SECRET || 'sua_chave',
+                secreto,
                 {expiresIn: '8h'}
             );
 
             return res.json({ token });
-        } catch (error){
-            return res.status(500).json({ message: 'Erro ao realizar seu login', error});
+        } catch (erro){
+            return res.status(500).json({ message: 'Erro ao realizar seu login', erro});
         }
     },
 };
