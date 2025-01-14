@@ -5,8 +5,8 @@ class GaleriaController{
         try{
             const images = await GaleriaRepository.findAll();
             res.json(images);
-        } catch(error){
-            return res.status(500).json({message: 'Erro ao verificar imagens', error});
+        } catch(erro){
+            return res.status(500).json({message: 'Erro ao verificar imagens', erro});
         }
     }
 
@@ -14,7 +14,7 @@ class GaleriaController{
         try{
             const {titulo, url, categoria} = req.body;
             if(!titulo || !url || !categoria){
-                return res.status(400).json({message: 'Erro ao criar imagem, insira o que é pedido nos campos corretamente.'});
+                return res.status(400).json({message: 'Erro ao criar imagem, insira o que é pedido.'});
             }
 
             const newImage = await GaleriaRepository.create({ titulo, url, categoria });
