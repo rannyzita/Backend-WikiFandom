@@ -12,7 +12,7 @@ class ImagemController {
 
     static async createImagem(req, res) {
         try {
-            const { id_post, url } = req.body;
+            const {id_post, url} = req.body;
 
             if (!id_post || !url) {
                 return res.status(400).json({ message: 'Erro, dados inválidos.' });
@@ -28,15 +28,12 @@ class ImagemController {
     static async deleteImagem(req, res) {
         try {
             const { id } = req.params;
-
             if (!id) {
                 return res.status(400).json({ message: 'Id da imagem não foi informado.' });
             }
-
             const deletado = await ImagemRepository.delete(id);
-
             if (deletado) {
-                res.json({ message: 'Imagem deletada com sucesso.' });
+                res.json({ message: 'Imagem deletada com sucesso.' })
             } else {
                 res.status(404).json({ message: 'Imagem não encontrada.' });
             }

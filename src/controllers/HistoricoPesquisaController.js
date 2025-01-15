@@ -1,5 +1,4 @@
 const HistoricoPesquisaRepository = require('../models/HistoricoPesquisaRepository.js');
-
 class HistoricoPesquisaController{
     static async getAllHistorico(req, res){
         try{
