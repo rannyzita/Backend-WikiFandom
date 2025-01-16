@@ -3,12 +3,13 @@ const cors = require("cors");
 const routeUsuario = require("./routes/UsuarioRoute.js");
 const app = express();
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
+// Middleware
+app.use(cors());
+
 // Rotas
-app.use("/api/usuarios", routeUsuario);
+app.use(routeUsuario);
 
 // Iniciar o servidor
 const PORT = 3333;
