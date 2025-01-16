@@ -1,6 +1,7 @@
 const ImagemRepository = require('../models/ImagemRepository');
 
 class ImagemController {
+    // Metódo de verificar todas as imagens
     static async getAllImage(req, res) {
         try {
             const imagens = await ImagemRepository.findByPostId(req.params.id_post);
@@ -10,6 +11,7 @@ class ImagemController {
         }
     }
 
+    // Metódo para criar uma imagem
     static async createImagem(req, res) {
         try {
             const {id_post, url} = req.body;
@@ -25,6 +27,7 @@ class ImagemController {
         }
     }
 
+    // Metódo para deletar uma imagem
     static async deleteImagem(req, res) {
         try {
             const { id } = req.params;

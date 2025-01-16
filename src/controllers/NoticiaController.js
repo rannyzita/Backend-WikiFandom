@@ -1,6 +1,7 @@
 const NoticiaModel = require('../models/NoticiaRepository.js');
 
 class NoticiaRepository {
+    // Verificar todas as Notícias
     static async getAllNoticias(req, res) {
         try {
             const news = await NoticiaRepository.findAll();
@@ -11,6 +12,7 @@ class NoticiaRepository {
         }
     }
 
+    // Metódo para criar uma nova notícia
     static async createNoticia(req, res) {
         try {
             const {data} = req.body;
@@ -27,6 +29,7 @@ class NoticiaRepository {
         }
     }
 
+    // Metódo para deletar uma notícia
     static async deleteNoticia(req, res) {
         try {
             const { id } = req.params;
@@ -40,7 +43,7 @@ class NoticiaRepository {
             } else {
                 res.status(404).json({ message: 'Notícia não encontrada.' });
             }
-            
+
         } catch (erro) {
             console.error('Erro ao deletar notícia:', erro);
             return res.status(500).json({ message: 'Erro ao deletar notícia.', erro });

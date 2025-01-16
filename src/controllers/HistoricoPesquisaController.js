@@ -1,5 +1,6 @@
 const HistoricoPesquisaRepository = require('../models/HistoricoPesquisaRepository.js');
 class HistoricoPesquisaController{
+    // Verificar todo o histórico
     static async getAllHistorico(req, res){
         try{
             const userId = req.user.id;
@@ -10,6 +11,7 @@ class HistoricoPesquisaController{
         }
     }
 
+    // Criar histórico
     static async createHistorico(req, res){
         try{
             const {data} = req.body;
