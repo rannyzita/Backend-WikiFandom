@@ -1,6 +1,7 @@
 const GaleriaRepository = require('../models/GaleriaRepository.js');
 
 class GaleriaController{
+    // Método para buscar todas as imagens..
     static async getAllImages(req, res){
         try{
             const images = await GaleriaRepository.findAll();
@@ -10,6 +11,7 @@ class GaleriaController{
         }
     }
 
+     // Método para criar uma nova imagem
     static async createImage(req, res){
         try{
             const {titulo, url, categoria} = req.body;
@@ -25,6 +27,7 @@ class GaleriaController{
         }
     }
 
+     // Método para deletar uma imagem por ID
     static async deleteImage(req, res){
         try{
             const imagemId = req.params.imagemId;
