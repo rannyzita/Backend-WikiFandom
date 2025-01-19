@@ -5,6 +5,9 @@ const knex = require('../db/knex'); // importa o banco de dados que foi configur
 // registrando um usuário novo
 module.exports = {
     // registra um novo usuário
+    // (req)uisição e (res)posta
+
+    //promises
     async registro (req, res){
         const {nome, email, senha} = req.body;
 
@@ -43,18 +46,23 @@ module.exports = {
                 return res.status(401).json({message: 'Credenciais inválidas'})
             }
 
-            const secreto = process.env.JWT_SECRET;
+            // chave secreta utilizada verificar a autenticidade de tokens JWT
+            const secret = process.env.JWT_SECRET;
+            // assinado com um segredo para garantir que a informação não tenha sido alterada
+
             if (!secret) {
                 throw new Error("JWT_SECRET não está configurado.");
             }
 
             const token = jwt.sign(
                 {id: usuario.id},
-                secreto,
+                secret,
                 {expiresIn: '8h'}
             );
 
-            return res.json({ token });
+            // se as credenciais forem válidas, gera um token JWT assinado com o segredo configurado
+            return res.json({token});
+        
         } catch (erro){
             return res.status(500).json({ message: 'Erro ao realizar seu login', erro});
         }
