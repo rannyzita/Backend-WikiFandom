@@ -54,6 +54,7 @@ module.exports = {
                 throw new Error("JWT_SECRET não está configurado.");
             }
 
+            // gerar o token JWT
             const token = jwt.sign(
                 {id: usuario.id},
                 secret,
