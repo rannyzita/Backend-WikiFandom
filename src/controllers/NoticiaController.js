@@ -1,4 +1,4 @@
-const NoticiaModel = require('../models/NoticiaRepository.js');
+const NoticiaRepository = require('../models/NoticiaRepository.js');
 
 class NoticiaRepository {
     // Verificar todas as Notícias
