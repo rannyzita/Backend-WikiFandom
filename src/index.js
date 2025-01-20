@@ -9,8 +9,9 @@ const routeFavorito = require("./routes/PostFavoritoRoute.js");
 const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
 const routeMiddleware = require("./routes/authRoutes.js");
-const app = express();
 const myMiddleware = require("./middlewares/auth.js"); 
+const knex = require('../db/knex');
+const app = express();
 
 
 // Use the middleware function

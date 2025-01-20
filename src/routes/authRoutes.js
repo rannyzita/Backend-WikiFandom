@@ -1,5 +1,6 @@
 const express = require('express');
 const authController = require('../controllers/authController');
+const knex = require('../db/knex');
 
 const router = express.Router();
 
