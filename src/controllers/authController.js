@@ -1,12 +1,10 @@
 const bcrypt = require('bcrypt'); // hash de senhas, em resumo importa um método para criptografar senhas
 const jwt = require('jsonwebtoken'); // tokens JWT (validar acesso do usuário)
-const knex = require('../db/knex'); // importa o banco de dados que foi configurado com knex
+const knex = require('../db/connection.js'); // importa o banco de dados que foi configurado com knex
+const AuthRepository = require('../models/AuthRepository.js')
 
-// registrando um usuário novo
-module.exports = {
-    // registra um novo usuário
+class AuthController{
     // (req)uisição e (res)posta
-
     //promises
     async registro (req, res){
         const {nome, email, senha} = req.body;
@@ -16,22 +14,22 @@ module.exports = {
         }
 
         try{
-            const usuarioExiste = await UsuarioRepository.findByEmail(email);
+            const usuarioExiste = await AuthRepository.findByEmail(email);
             if (usuarioExiste) {
                 return res.status(400).json({ message: 'Usuário já existe.' });
             }
 
-            const senha = await bcrypt.hash(senha, 8);
+            const senhaCriptografada = await bcrypt.hash(senha, 8);
             await knex('Usuario').insert({
                 nome,
                 email,
-                senha: senha
+                senha: senhaCriptografada
             })
             return res.status(201).json({message: 'Usuário registrado.'});
         } catch(erro){
             return res.status(500).json({message: 'Erro ao registrar usuário.', erro});
         }
-    },
+    }
 
     async login(req, res){
         const {email, senha} = req.body;
@@ -41,7 +39,7 @@ module.exports = {
         }
 
         try{
-            const usuario = await UsuarioRepository.findByEmail(email);
+            const usuario = await AuthRepository.findByEmail(email);
             if (!usuario || !(await bcrypt.compare(senha, usuario.senha))){
                 return res.status(401).json({message: 'Credenciais inválidas'})
             }
@@ -67,7 +65,7 @@ module.exports = {
         } catch (erro){
             return res.status(500).json({ message: 'Erro ao realizar seu login', erro});
         }
-    },
-};
+    }
+}
 
-module.exports = authController;
+module.exports = new AuthController();

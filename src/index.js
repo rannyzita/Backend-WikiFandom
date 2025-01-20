@@ -10,7 +10,7 @@ const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
 const routeMiddleware = require("./routes/authRoutes.js");
 const myMiddleware = require("./middlewares/auth.js"); 
-const knex = require('../db/knex');
+const knex = require('../db/connection.js');
 const app = express();
 
 
