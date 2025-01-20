@@ -1,6 +1,6 @@
 const NoticiaRepository = require('../models/NoticiaRepository.js');
 
-class NoticiaRepository {
+class NoticiaController {
     // Verificar todas as Notícias
     static async getAllNoticias(req, res) {
         try {
@@ -51,4 +51,4 @@ class NoticiaRepository {
     }
 }
 
-module.exports = NoticiaRepository;
+module.exports = NoticiaController;
