@@ -9,7 +9,7 @@ exports.up = function(knex) {
         table.string("titulo", 45).notNullable();
         table.datetime("data_criacao").defaultTo(knex.fn.now());
         table.text("url_post", 500).notNullable();
-	table.string("categoria", 45).notNullable();
+	    table.string("categoria", 45).notNullable();
     });
 };
 

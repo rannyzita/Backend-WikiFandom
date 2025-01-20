@@ -14,14 +14,14 @@ class ImagemController {
     // Metódo para criar uma imagem
     static async createImagem(req, res) {
         try {
-            const {id_post, url} = req.body;
+            const {url} = req.body;
 
-            if (!id_post || !url) {
+            if (!url) {
                 return res.status(400).json({ message: 'Erro, dados inválidos.' });
             }
 
-            const imageId = await ImagemRepository.create({ id_post, url });
-            return res.status(201).json({ message: 'Imagem criada com sucesso.', id: imageId });
+            const imageId = await ImagemRepository.create({ url });
+            return res.status(201).json({ message: 'Imagem criada com sucesso.'});
         } catch (erro) {
             return res.status(500).json({ message: 'Erro ao criar imagem.', erro });
         }
