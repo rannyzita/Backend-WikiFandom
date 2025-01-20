@@ -5,11 +5,7 @@ const routeHistorico = require("./routes/HistoricoRoute.js")
 const routeImagem = require("./routes/ImagemRoute.js");
 const routePost = require("./routes/PostRoute.js");
 const routeGaleria = require("./routes/GaleriaRoute.js");
-<<<<<<< HEAD
-const routeFavorito = require("./routes/PostFavorito.js");
-=======
 const routeFavorito = require("./routes/PostFavoritoRoute.js");
->>>>>>> b810903d77342b2cf57835a932888a1db19efb94
 const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
 const app = express();
