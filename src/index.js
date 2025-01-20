@@ -9,7 +9,11 @@ const routeFavorito = require("./routes/PostFavoritoRoute.js");
 const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
 const app = express();
+const myMiddleware = require("./middlewares/auth.js"); 
 
+
+// Use the middleware function
+app.use(myMiddleware);
 
 app.use(express.json());
 
