@@ -8,4 +8,3 @@ router.post('/registro', authController.registro);
 router.post('/login', authController.login);
 
 module.exports = router;
-
