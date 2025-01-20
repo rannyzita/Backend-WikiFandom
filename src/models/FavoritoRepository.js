@@ -1,3 +1,5 @@
+const knex = require('../db/connection.js');
+
 class FavoritoRepository {
     static async findAllByUserId(id_usuario) {
         return await knex("Favorito").where("id_usuario", id_usuario);

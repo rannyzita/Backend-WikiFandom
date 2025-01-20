@@ -1,3 +1,5 @@
+const knex = require('../db/connection.js');
+
 class ImagemRepository {
     static async findByPostId(id_post) {
         return await knex("Imagem").where("id_post", id_post);

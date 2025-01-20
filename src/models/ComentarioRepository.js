@@ -1,3 +1,5 @@
+const knex = require('../db/connection.js');
+
 class ComentarioRepository {
     static async findAll() {
         return await knex("Comentario").select();

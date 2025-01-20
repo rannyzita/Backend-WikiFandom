@@ -1,3 +1,4 @@
+const knex = require('../db/connection.js');
 class HistoricoPesquisaRepository {
     static async findAllByUserId(id_usuario) {
         return await knex("Historico_Pesquisa").where("id_usuario", id_usuario);
