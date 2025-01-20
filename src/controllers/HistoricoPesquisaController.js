@@ -14,11 +14,6 @@ class HistoricoPesquisaController{
     // Criar histórico
     static async createHistorico(req, res){
         try{
-            const {data} = req.body;
-            if(!data || typeof data !== 'string'){
-                return res.status(400).json({message:'Erro, dados inválidos'})
-            }
-
             const createHistorico = await HistoricoPesquisaRepository.create({data});
             return res.status(201).json({ message: 'Historico realizado com sucesso', createHistorico });
         } catch(erro){
