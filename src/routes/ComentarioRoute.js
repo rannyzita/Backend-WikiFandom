@@ -6,7 +6,6 @@ const ComentarioController = require('../controllers/ComentarioController.js');
 router.get('/comentarios', ComentarioController.getAllComentarios);
 router.get('/comentarios/:id', ComentarioController.getAllComentarioById);
 router.post('/comentarios', ComentarioController.createComentario);
-router.put('/comentarios/:id', ComentarioController.updateComentario);
 router.delete('/comentarios/:id', ComentarioController.deleteComentario);
 
 
