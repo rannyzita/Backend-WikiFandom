@@ -10,12 +10,8 @@ const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
 const routeMiddleware = require("./routes/authRoutes.js");
 const myMiddleware = require("./middlewares/auth.js"); 
-const knex = require('../db/connection.js');
+const knex = require('./db/connection.js');
 const app = express();
-
-
-// Use the middleware function
-app.use(myMiddleware);
 
 app.use(express.json());
 
@@ -32,6 +28,7 @@ app.use(routeFavorito);
 app.use(routeComentario);
 app.use(routeNoticia);
 app.use(routeMiddleware);
+app.use(myMiddleware);
 
 // Iniciar o servidor
 const PORT = 3333;
