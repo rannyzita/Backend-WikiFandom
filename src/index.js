@@ -8,6 +8,7 @@ const routeGaleria = require("./routes/GaleriaRoute.js");
 const routeFavorito = require("./routes/PostFavoritoRoute.js");
 const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
+const routeMiddleware = require("./routes/authRoutes.js");
 const app = express();
 
 
@@ -25,6 +26,7 @@ app.use(routeGaleria);
 app.use(routeFavorito);
 app.use(routeComentario);
 app.use(routeNoticia);
+app.use(routeMiddleware);
 
 // Iniciar o servidor
 const PORT = 3333;
