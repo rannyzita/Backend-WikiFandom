@@ -9,7 +9,7 @@ const routeFavorito = require("./routes/PostFavoritoRoute.js");
 const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
 const routeMiddleware = require("./routes/authRoutes.js");
-const myMiddleware = require("./middlewares/auth.js");
+const authMiddleware = require("./middlewares/auth.js");
 const knex = require('./db/connection.js');
 const app = express();
 
@@ -28,7 +28,7 @@ app.use(routeFavorito);
 app.use(routeComentario);
 app.use(routeNoticia);
 app.use('/auth', routeMiddleware);
-app.use(myMiddleware);
+app.use(authMiddleware);
 
 // Iniciar o servidor
 const PORT = 3333;
