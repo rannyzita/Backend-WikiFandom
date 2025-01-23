@@ -14,11 +14,11 @@ class HistoricoPesquisaController{
     // Criar histórico
     static async createHistorico(req, res){
         try {
-            console.log('Received data:', req.body); // Log the received data
+            console.log('Received data:', req.body); 
             const createHistorico = await HistoricoPesquisaRepository.create(req.body);
             return res.status(201).json({ message: 'Historico realizado com sucesso', createHistorico });
         } catch (erro) {
-            console.error('Error creating historico:', erro); // Log the full error
+            console.error('Erro ao criar histórico', erro);
             return res.status(500).json({ message: 'Carregamento do histórico falhou.', erro: erro.message });
         }
     }

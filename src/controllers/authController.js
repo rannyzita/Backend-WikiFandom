@@ -5,7 +5,7 @@ const AuthRepository = require('../models/AuthRepository.js')
 
 class AuthController{
     // (req)uisição e (res)posta
-    //promises
+    // promises
     async registro (req, res){
         const {nome, email, senha} = req.body;
 
