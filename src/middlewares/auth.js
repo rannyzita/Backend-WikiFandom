@@ -9,7 +9,12 @@ const authMiddleware = (req, res, next) => {
         return res.status(401).json({message: 'Token não fornecido'});
     } 
     try{
-        const decoded = jwt.verify(token, 'sua_chave');
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+        throw new Error("JWT_SECRET não está configurado.");
+        }
+        const decoded = jwt.verify(token, secret);
+        
         req.user = decoded;
         next();
     } catch (error){
