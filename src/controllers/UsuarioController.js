@@ -28,6 +28,12 @@ static async getUsuarioById(req, res) {
   // Método para criar um novo usuário
 static async createUsuario(req, res) {
 
+    const { nome } = req.body;
+
+    if (!nome || typeof nome !== 'string') {
+        return res.status(400).json({ message: 'nome deve ser string.' });
+    }
+
     try {
         const newUsuario = await UsuarioRepository.create(req.body);
         // status usado para indicar que algum recurso foi criado com sucesso

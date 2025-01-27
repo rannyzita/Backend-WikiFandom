@@ -10,7 +10,6 @@ app.use(cors());
 
 app.use(routes);
 
-
 // Iniciar o servidor
 const PORT = 3333;
 app.listen(PORT, () => {
