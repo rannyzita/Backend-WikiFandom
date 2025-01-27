@@ -66,7 +66,7 @@ static async updateUsuario(req, res) {
                 // mas sem retorno de algo
                 res.status(204).end();
             } else {
-                res.status(404).json({ message: 'User not found' });
+                res.status(404).json({ message: 'Usuário não encontrado.' });
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
