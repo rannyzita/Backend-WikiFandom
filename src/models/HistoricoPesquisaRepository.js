@@ -9,7 +9,7 @@ class HistoricoPesquisaRepository {
     }
 
     static async delete(id) {
-        return await knex("Hsitorico_Pesquisa").where("id", id).del();
+        return await knex("Historico_Pesquisa").where("id", id).del();
     }
 }
 

@@ -3,7 +3,7 @@ class HistoricoPesquisaController{
     // Verificar todo o histórico
     static async getAllHistorico(req, res){
         try{
-            const userId = req.user.id;
+            const userId = req.params.id;
             const historico = await HistoricoPesquisaRepository.findAllByUserId(userId);
             res.json(historico);
         } catch(erro){
@@ -23,18 +23,16 @@ class HistoricoPesquisaController{
 
     static async deleteHistorico(req, res){
         try {
-            const {id} = req.body;
-
-            if(!id) {
+            const deletedHistorico = await HistoricoPesquisaRepository.delete(req.params.id);
+    
+            if(!deletedHistorico) {
                 return res.status(400).json({ message: 'ID do histórico é obrigatório.' });
             }
-
-            const deleteHistorico = await HistoricoPesquisaRepository.delete(id);
-
-            if (deleteHistorico) {
-                res.json({ message: "historico apagado."});
+    
+            if (deletedHistorico) {
+                res.json({ message: "Histórico apagado."});
             } else {
-                res.status(404).json({ message: "Historico não encontrado." })
+                res.status(404).json({ message: "Histórico não encontrado." })
             }
         } catch (error) {
             return res.status(404).json({ message: "Error: " + error.message });
