@@ -13,4 +13,10 @@ router.put('/usuarios/:id', UsuarioController.updateUsuario);
 
 router.delete('/usuarios/:id', UsuarioController.deleteUsuario);
 
+/*
+// adicionando rota de atualizar e deletar
+router.put('/usuarios/:id' , UsuarioController.atualizarPerfil);
+
+router.delete('/usuarios/:id' , UsuarioController.atualizarPerfil)*/
+
 module.exports = router;

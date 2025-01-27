@@ -15,13 +15,12 @@ class NoticiaController {
     // Metódo para criar uma nova notícia
     static async createNoticia(req, res) {
         try {
-            const {data} = req.body;
 
-            if (!data) {
+            if (!req.body) {
                 return res.status(400).json({ message: 'Erro, data inválida.' });
             }
 
-            const noticia = await NoticiaRepository.createNoticia({ data });
+            const noticia = await NoticiaRepository.create(req.body );
             return res.status(201).json({ message: 'Notícia criada com sucesso.', data: noticia });
         } catch (erro) {
             console.error('Erro ao criar notícia:', erro);

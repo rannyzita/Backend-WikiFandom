@@ -17,6 +17,7 @@ class PostFavoritoController {
         static async createPostFavorito(req, res) {
             try {
                 const favorito = await FavoritoRepository.create({
+                    // ADICIONAR VERIFICAÇÃO DE ENTRADA
                     id_usuario: req.body.id_usuario,
                     id_post: req.body.id_post
                 });

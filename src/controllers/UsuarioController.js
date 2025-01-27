@@ -51,21 +51,58 @@ static async updateUsuario(req, res) {
     }
 }
 
-  // Método para deletar um usuário
-static async deleteUsuario(req, res) {
-    try {
-        const deletedUsuario = await UsuarioRepository.delete(req.params.id);
-        if (deletedUsuario) {
-            // status 204 indica que algo foi realizada
-            // mas sem retorno de algo
-            res.status(204).end();
-        } else {
-            res.status(404).json({ message: 'User not found' });
+    // Método para deletar um usuário
+    static async deleteUsuario(req, res) {
+        try {
+            const deletedUsuario = await UsuarioRepository.delete(req.params.id);
+            if (deletedUsuario) {
+                // status 204 indica que algo foi realizada
+                // mas sem retorno de algo
+                res.status(204).end();
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
-}
+
+//Adicionando metódos para atualizar e deletar perfil segundo requisitos
+ /*   static async atualizarPerfil(req, res){
+        try {
+            const id_usuario = req.usuario.id;
+            const {nome, email, foto_perfil} = req.body;
+
+            const dadosAtualizados = {nome, email, foto_perfil}
+            if (nome)dadosAtualizados.nome = nome;
+            if(email)dadosAtualizados.email = email;
+            if(foto_perfil)dadosAtualizados.foto_perfil = foto_perfil;
+
+            const atualizarUsuario = await UsuarioRepository.update(id_usuario, req.body);
+            if (atualizarUsuario) {
+                res.json(atualizarUsuario);
+            } else {
+                res.status(404).json({ message: 'Usuário não foi encontrado' });
+            }
+        } catch (erro) {
+            res.status(500).json({message: erro.message});
+        }
+    }
+
+    static async deletarPerfil(req, res){
+        try{
+            const id_usuario = req.usuario.id;
+            const deletarUsuario = await UsuarioRepository.delete(id_usuario);
+            if(deletarUsuario){
+                res.status(204).end();
+            } else{
+                res.status(404).json({message: 'Usuário não foi encontrado'});
+            }
+        } catch (erro){
+            res.status(500).json({message: erro.message});
+        }
+    }*/
+
 }
 
 module.exports = UsuarioController;

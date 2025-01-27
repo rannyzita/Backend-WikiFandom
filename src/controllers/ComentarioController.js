@@ -26,10 +26,24 @@ class ComentarioController {
 
     static async createComentario(req, res) {
         try {
-            const newComentario = await ComentarioRepository.create(req.body);
+            const { id_post, conteudo, id_usuario } = req.body;
+    
+            if (!id_post || typeof id_post !== 'string') {
+                return res.status(400).json({ message: 'ID do post é obrigatório e deve ser uma string.' });
+            }
+    
+            if (!conteudo || typeof conteudo !== 'string') {
+                return res.status(400).json({ message: 'Conteudo do comentário é obrigatório e deve ser uma string.' });
+            }
+
+            if (!id_usuario || typeof id_usuario !== 'string') {
+                return res.status(400).json({ message: 'id do usuário é obrigatório e deve ser uma string.' });
+            }
+    
+            const newComentario = await ComentarioRepository.create({ id_post, conteudo, id_usuario});
             res.status(201).json(newComentario);
         } catch (err) {
-            res.status(500).json({ error: err.message});
+            res.status(500).json({ error: err.message });
         }
     }
 

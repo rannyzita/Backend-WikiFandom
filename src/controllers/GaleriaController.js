@@ -12,29 +12,29 @@ class GaleriaController{
     }
 
      // Método para criar uma nova imagem
-    static async createImage(req, res){
-        try{
-            const {id_imagem} = req.body;
-            if(!id_imagem ){
-                return res.status(400).json({message: 'Erro ao criar imagem, insira o que é pedido.'});
+    static async createImage(req, res) {
+        try {
+            const { id_imagem, descricao } = req.body;
+    
+            if (!id_imagem || typeof id_imagem !== 'string') {
+                return res.status(400).json({ message: 'ID da imagem inválido.' });
             }
-            console.log('id_imagem:', id_imagem);
-
-            const url_image =  await GaleriaRepository.getImageUrlById(id_imagem);
-            if(!url_image){
-                return res.status(404).json({ message: 'Imagem não encontrada.'});
+    
+            const imagemExistente = await GaleriaRepository.findById(id_imagem); 
+            if (imagemExistente) {
+                const adicionadaNaGaleria = await GaleriaRepository.adicionarImagemNaGaleria(id_imagem, descricao); 
+                console.log(adicionadaNaGaleria); 
+                if (!adicionadaNaGaleria) {
+                    return res.status(500).json({ message: 'Erro ao adicionar imagem à galeria.' });
+                }
             }
-            console.log('url_image:', url_image);
-
-            const newImage = await GaleriaRepository.create({ url_image });
-            res.status(201).json({ message: 'Imagem criada.', imagem: newImage });
-            // tá pulando para o catch
+            res.status(200).json({ message: 'Imagem adicionada à galeria com sucesso.' });
         } catch (erro) {
-            console.error('Erro ao criar imagem', erro)
-            return res.status(500).json({ message: 'Erro na criação da sua imagem', erro });
+            console.error(erro); 
+            return res.status(500).json({ message: 'Erro ao adicionar imagem à galeria.', erro });
         }
     }
-
+    
      // Método para deletar uma imagem por ID
     static async deleteImage(req, res){
         try{
