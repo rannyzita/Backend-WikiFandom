@@ -18,7 +18,7 @@ static async getUsuarioById(req, res) {
         if (usuario) {
             res.json(usuario);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'Usuário nao encontrado' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -50,7 +50,7 @@ static async updateUsuario(req, res) {
         if (updatedUsuario) {
             res.json(updatedUsuario);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'Usuário não encontrado' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -72,43 +72,6 @@ static async updateUsuario(req, res) {
             res.status(500).json({ error: err.message });
         }
     }
-
-//Adicionando metódos para atualizar e deletar perfil segundo requisitos
- /*   static async atualizarPerfil(req, res){
-        try {
-            const id_usuario = req.usuario.id;
-            const {nome, email, foto_perfil} = req.body;
-
-            const dadosAtualizados = {nome, email, foto_perfil}
-            if (nome)dadosAtualizados.nome = nome;
-            if(email)dadosAtualizados.email = email;
-            if(foto_perfil)dadosAtualizados.foto_perfil = foto_perfil;
-
-            const atualizarUsuario = await UsuarioRepository.update(id_usuario, req.body);
-            if (atualizarUsuario) {
-                res.json(atualizarUsuario);
-            } else {
-                res.status(404).json({ message: 'Usuário não foi encontrado' });
-            }
-        } catch (erro) {
-            res.status(500).json({message: erro.message});
-        }
-    }
-
-    static async deletarPerfil(req, res){
-        try{
-            const id_usuario = req.usuario.id;
-            const deletarUsuario = await UsuarioRepository.delete(id_usuario);
-            if(deletarUsuario){
-                res.status(204).end();
-            } else{
-                res.status(404).json({message: 'Usuário não foi encontrado'});
-            }
-        } catch (erro){
-            res.status(500).json({message: erro.message});
-        }
-    }*/
-
 }
 
 module.exports = UsuarioController;
