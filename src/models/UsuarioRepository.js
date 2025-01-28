@@ -32,4 +32,6 @@ class UsuarioRepository {
     }
 }
 
+// permite que essa classe seja chamada em outro
+// arquivo
 module.exports = UsuarioRepository;

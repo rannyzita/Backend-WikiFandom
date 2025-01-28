@@ -1,11 +1,14 @@
 const UsuarioRepository = require('../models/UsuarioRepository.js');
 
+// status usados:
+// 500, 404, 400, 201
+
 class UsuarioController {
   // Método para listar todos os usuários
 static async getAllUsuarios(req, res) {
     try {
         const usuarios = await UsuarioRepository.findAll();
-        res.json(usuarios);
+        res.status(200).json(usuarios);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
