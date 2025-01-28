@@ -1,8 +1,8 @@
 const knex = require('../db/connection.js');
 
 class ImagemRepository {
-    static async findByPostId(id_post) {
-        return await knex("Imagem").where("id_post", id_post);
+    static async findById(id) {
+        return await knex("Imagem").where("id", id);
     }
 
     static async create(data) {
@@ -11,6 +11,10 @@ class ImagemRepository {
 
     static async delete(id) {
         return await knex("Imagem").where("id", id).del();
+    }
+
+    static async findAll() {
+        return await knex("Imagem").select();
     }
 }
 

@@ -2,11 +2,16 @@ const ImagemRepository = require('../models/ImagemRepository');
 const { v4: uuidv4 } = require('uuid');
 
 class ImagemController {
-    // Metódo de verificar todas as imagens pelo id do user
+    // Metódo de verificar todas as imagens pelo id do post
     static async getImagemById(req, res) {
         try {
-            const imagens = await ImagemRepository.findByPostId(req.params.id_post);
-            res.json(imagens);
+            const imagens = await ImagemRepository.findById(req.params.id);
+
+            if (!imagens) {
+                return res.status(404).json({ message: 'Imagem não encontrada.' });
+            }
+
+            res.status(200).json(imagens);
         } catch (erro) {
             return res.status(500).json({ message: 'Erro ao verificar imagens.', erro });
         }
@@ -53,6 +58,20 @@ class ImagemController {
             }
         } catch (erro) {
             return res.status(500).json({ message: 'Erro ao deletar imagem.', erro });
+        }
+    }
+
+    static async allImagem(req, res) {
+        try {
+            const imagens = await ImagemRepository.findAll();
+
+            if (!imagens) {
+                return res.status(404).json({ message: 'Imagens não encontradas.' });
+            }
+
+            res.status(200).json(imagens);
+        } catch (erro) {
+            return res.status(500).json({ message: 'Erro ao verificar imagens.', erro });
         }
     }
 }
