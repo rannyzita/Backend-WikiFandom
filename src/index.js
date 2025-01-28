@@ -5,6 +5,13 @@ const { authMiddleware } = require("./middlewares/auth.js");
 const knex = require('./db/connection.js');
 const app = express();
 
+//docs api
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs1', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+//ndjenjdnejndejn
+
 app.use(express.json());
 app.use(cors());
 

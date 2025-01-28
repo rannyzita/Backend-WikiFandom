@@ -1,0 +1,158 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Documentação API de WikiFandom",
+      "version": "1.0.0",
+      "description": "Documentação da API"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3333",
+        "description": "Servidor local"
+      }
+    ],
+    "paths": {
+      "/registro": {
+        "post": {
+          "summary": "Registro de Usuário",
+          "description": "Registra um novo usuário no sistema.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "example": "João Silva"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "joao.silva@example.com"
+                    },
+                    "senha": {
+                      "type": "string",
+                      "example": "senha123"
+                    }
+                  },
+                  "required": ["nome", "email", "senha"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Usuário registrado com sucesso.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Usuário registrado."
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na requisição, campos obrigatórios ausentes ou usuário já existe.",
+              "content": {
+                "application/json": {
+                  "examples": {
+                    "campos_ausentes": {
+                      "summary": "Campos obrigatórios ausentes",
+                      "value": {"message": "Todos campos são obrigatórios!"}
+                    },
+                    "usuario_existente": {
+                      "summary": "Usuário já existe",
+                      "value": {"message": "Usuário já existe."}
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro interno do servidor ao registrar usuário.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Erro ao registrar usuário.",
+                    "erro": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/login": {
+        "post": {
+          "summary": "Login de Usuário",
+          "description": "Realiza o login de um usuário e retorna um token JWT.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "joao.silva@example.com"
+                    },
+                    "senha": {
+                      "type": "string",
+                      "example": "senha123"
+                    }
+                  },
+                  "required": ["email", "senha"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login realizado com sucesso.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na requisição, email ou senha não fornecidos.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Email e senha obrigatórios"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Credenciais inválidas.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Credenciais inválidas"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro interno do servidor ao realizar login.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Erro ao realizar seu login",
+                    "erro": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
