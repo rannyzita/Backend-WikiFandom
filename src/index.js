@@ -10,7 +10,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
 app.use('/api-docs1', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-//ndjenjdnejndejn
+ // deu certo
 
 app.use(express.json());
 app.use(cors());
