@@ -19,7 +19,7 @@ static async getUsuarioById(req, res) {
     try {
         const usuario = await UsuarioRepository.findById(req.params.id);
         if (usuario) {
-            res.json(usuario);
+            res.status(200).json(usuario);
         } else {
             res.status(404).json({ message: 'Usuário nao encontrado' });
         }
@@ -51,7 +51,7 @@ static async updateUsuario(req, res) {
     try {
         const updatedUsuario = await UsuarioRepository.update(req.params.id, req.body);
         if (updatedUsuario) {
-            res.json(updatedUsuario);
+            res.status(200).json(updatedUsuario);
         } else {
             res.status(404).json({ message: 'Usuário não encontrado' });
         }
