@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const PostController = require('../controllers/PostController');
-const autorizacao = require('../middlewares/autorizacao.js')
+const autorizacao = require('../middlewares/autorizacaoPost.js')
 
 // Usando os métodos do controller nas rotas
 
@@ -11,10 +11,13 @@ router.get('/posts', PostController.getAllPosts);
 // cria um post
 router.post('/posts', PostController.createPost);
 
-// pega um post pelo id
+// atualiza um post 
 router.put('/posts/:id', autorizacao.verificaAutorizacao, PostController.updatePost);
 
-// deleta um post pelo id
+// deleta um post 
 router.delete('/posts/:id', autorizacao.verificaAutorizacao, PostController.deletePost);
+
+// encontrar um post pelo id
+router.get('/posts/:id', )
 
 module.exports = router;
