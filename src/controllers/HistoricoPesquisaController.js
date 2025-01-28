@@ -21,8 +21,8 @@ class HistoricoPesquisaController{
     static async createHistorico(req, res){
         try {
 
-            if(!req.body.usuario_id ||!req.body.pesquisa_id) {
-                return res.status(400).json({ message: 'ID do usuario e do histórico são obrigatórios.' });
+            if(!req.body.id_usuario) {
+                return res.status(400).json({ message: 'ID do usuario é obrigatórios.' });
             }
 
             if(!req.body) {
