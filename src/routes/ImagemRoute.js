@@ -3,7 +3,7 @@ const router = express.Router();
 const ImagemController = require('../controllers/ImagemController');
 
 // lista uma imagem especifica
-router.get('/imagem/:id', async (req, res) => {
+router.get('/imagens/:id', async (req, res) => {
     try {
         await ImagemController.getImagemById(req, res);
     } catch (error) {
@@ -13,12 +13,12 @@ router.get('/imagem/:id', async (req, res) => {
 });
 
 // lista todas as imagens
-router.get('/imagens', ImagemController.getAllImages);
+router.get('/imagens', ImagemController.getAllImagem);
 
 // cria uma imagem
-router.post('/imagens', ImagemController.create);
+router.post('/imagens', ImagemController.createImagem);
 
 // deleta uma imagem
-router.delete('/imagens/:id', ImagemController.delete);
+router.delete('/imagens/:id', ImagemController.deleteImagem);
 
 module.exports = router;

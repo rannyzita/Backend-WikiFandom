@@ -47,9 +47,11 @@ class ImagemController {
     static async deleteImagem(req, res) {
         try {
             const { id } = req.params;
+
             if (!id) {
                 return res.status(400).json({ message: 'Id da imagem não foi informado.' });
             }
+            
             const deletado = await ImagemRepository.delete(id);
             if (deletado) {
                 res.json({ message: 'Imagem deletada com sucesso.' })
@@ -61,7 +63,7 @@ class ImagemController {
         }
     }
 
-    static async allImagem(req, res) {
+    static async getAllImagem(req, res) {
         try {
             const imagens = await ImagemRepository.findAll();
 
