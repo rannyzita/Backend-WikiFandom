@@ -2,8 +2,8 @@ const ImagemRepository = require('../models/ImagemRepository');
 const { v4: uuidv4 } = require('uuid');
 
 class ImagemController {
-    // Metódo de verificar todas as imagens
-    static async getAllImage(req, res) {
+    // Metódo de verificar todas as imagens pelo id do user
+    static async getImagemById(req, res) {
         try {
             const imagens = await ImagemRepository.findByPostId(req.params.id_post);
             res.json(imagens);
