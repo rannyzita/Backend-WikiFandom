@@ -31,7 +31,13 @@ class ComentarioController {
             if (!id_post || typeof id_post !== 'string') {
                 return res.status(400).json({ message: 'ID do post é obrigatório e deve ser uma string.' });
             }
-    
+
+            const post = await knex('post').where('id', postId).first();
+            
+            if (!post) {
+                return res.status(404).json({ message: "Post não encontrado" });
+            }
+
             if (!conteudo || typeof conteudo !== 'string') {
                 return res.status(400).json({ message: 'Conteudo do comentário é obrigatório e deve ser uma string.' });
             }

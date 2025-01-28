@@ -1,9 +1,15 @@
 const HistoricoPesquisaRepository = require('../models/HistoricoPesquisaRepository.js');
+
 class HistoricoPesquisaController{
     // Verificar todo o histórico do usuario
     static async getAllHistorico(req, res){
         try{
             const userId = req.params.id;
+
+            if(!userId){
+                return res.status(400).json({message: 'ID do usuario é obrigatório.'});
+            }
+
             const historico = await HistoricoPesquisaRepository.findAllByUserId(userId);
             res.json(historico);
         } catch(erro){
@@ -14,6 +20,15 @@ class HistoricoPesquisaController{
     // Criar histórico
     static async createHistorico(req, res){
         try {
+
+            if(!req.body.usuario_id ||!req.body.pesquisa_id) {
+                return res.status(400).json({ message: 'ID do usuario e do histórico são obrigatórios.' });
+            }
+
+            if(!req.body) {
+                return res.status(400).json({ message: 'Nenhum dado para criação do histórico.' });
+            }
+
             const createHistorico = await HistoricoPesquisaRepository.create(req.body);
             return res.status(201).json({ message: 'Historico realizado com sucesso', createHistorico });
         } catch (erro) {
@@ -30,7 +45,7 @@ class HistoricoPesquisaController{
             }
     
             if (deletedHistorico) {
-                res.json({ message: "Histórico apagado."});
+                res.status(200).json({ message: "Histórico apagado."});
             } else {
                 res.status(404).json({ message: "Histórico não encontrado." })
             }

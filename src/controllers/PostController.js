@@ -11,11 +11,30 @@ class PostController {
             res.status(500).json({ error: err.message });
         }
     }
+    
+    // encontrar um post especifico pelo id
+    static async findByIdPost(req, res) {
+        try {
+            const post = await PostRepository.findById(req.params.id);
+            if (post) {
+                res.status(200).json(post);
+            } else {
+                res.status(404).json({ message: "Post not found" });
+            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 
     // Método para adicionar um novo post
     static async createPost(req, res) {
         try {
             const post = await PostRepository.create(req.body);
+
+            if(!post) {
+                res.status(400).json({ message: "Está vazio." });
+                return;  // Evita que o restante da função seja executado se um erro ocorreu.
+            }
             res.status(201).json(post);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -27,7 +46,7 @@ class PostController {
         try {
             const updatedPost = await PostRepository.update(req.params.id, req.body);
             if (updatedPost) {
-                res.json(updatedPost);
+                res.status(200).json(updatedPost);
             } else {
                 res.status(404).json({ message: "Post not found" });
             }
