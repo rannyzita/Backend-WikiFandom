@@ -1,6 +1,6 @@
 const HistoricoPesquisaRepository = require('../models/HistoricoPesquisaRepository.js');
 class HistoricoPesquisaController{
-    // Verificar todo o histórico
+    // Verificar todo o histórico do usuario
     static async getAllHistorico(req, res){
         try{
             const userId = req.params.id;
