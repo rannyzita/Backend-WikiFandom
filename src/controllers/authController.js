@@ -39,6 +39,10 @@ class AuthController{
         }
 
         try{
+
+            // depois teria a comparação da senha do usuario que ele passou
+            // com a que foi gerada (criptografada)
+
             const usuario = await AuthRepository.findByEmail(email);
             if (!usuario || !(await bcrypt.compare(senha, usuario.senha))){
                 return res.status(401).json({message: 'Credenciais inválidas'})

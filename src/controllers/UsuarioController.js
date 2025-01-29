@@ -31,11 +31,14 @@ static async getUsuarioById(req, res) {
   // Método para criar um novo usuário
 static async createUsuario(req, res) {
 
-    const { nome } = req.body;
+    const { nome , senha} = req.body;
 
     if (!nome || typeof nome !== 'string') {
         return res.status(400).json({ message: 'nome deve ser string.' });
     }
+
+
+    // aqui deveria a geração da senha criptografa
 
     try {
         const newUsuario = await UsuarioRepository.create(req.body);
