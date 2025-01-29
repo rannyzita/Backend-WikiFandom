@@ -1,5 +1,6 @@
 const PostRepository = require('../models/PostRepository.js');
 const knex = require('../db/connection.js')
+const { v4: uuidv4 } = require('uuid');
 const UsuarioRepository = require('../models/UsuarioRepository.js');
 const ImagemRepository = require('../models/ImagemRepository.js');
 
@@ -31,21 +32,24 @@ class PostController {
     // Método para adicionar um novo post
     static async createPost(req, res) {
         try {
-            const usuario = await UsuarioRepository.findById(req.body.id_usuario);
+            const { id_usuario, titulo, conteudo, id_imagem } = req.body;
+            const id = uuidv4();
 
+            const usuario = await UsuarioRepository.findById(id_usuario);
+            
             if(!usuario) {
                 res.status(404).json({ message: "Usuário não encontrado." });
                 return;  // Evita que o restante da função seja executado se um erro ocorreu.
             }
 
-            const imagem = await ImagemRepository.findById(req.body.id_imagem);
+            const imagem = await ImagemRepository.findById(id_imagem);
 
             if (!imagem) {
                 res.status(404).json({ message: "Imagem não encontrada." });
                 return;  // Evita que o restante da função seja executado se um erro ocorreu.
             }
-            
-            const post = await PostRepository.create(req.body);
+
+            const post = await PostRepository.create({ id, id_usuario, titulo, conteudo, id_imagem});
 
             if(!post) {
                 res.status(400).json({ message: "Está vazio." });
