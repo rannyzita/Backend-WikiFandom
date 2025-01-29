@@ -32,30 +32,31 @@ class PostController {
     // Método para adicionar um novo post
     static async createPost(req, res) {
         try {
-            const { id_usuario, titulo, conteudo, id_imagem } = req.body;
-            const id = uuidv4();
+        const { id_usuario, titulo, conteudo, id_imagem } = req.body;
+        const id = uuidv4();
 
-            const usuario = await UsuarioRepository.findById(id_usuario);
-            
-            if(!usuario) {
-                res.status(404).json({ message: "Usuário não encontrado." });
-                return;  // Evita que o restante da função seja executado se um erro ocorreu.
-            }
+        const usuario = await UsuarioRepository.findById(id_usuario);
 
-            const imagem = await ImagemRepository.findById(id_imagem);
+        if (!usuario) {
+            res.status(404).json({ message: "Usuário não encontrado." });
+            return;
+        }
 
-            if (!imagem) {
-                res.status(404).json({ message: "Imagem não encontrada." });
-                return;  // Evita que o restante da função seja executado se um erro ocorreu.
-            }
+        if (!id_imagem) {
+            res.status(400).json({ message: "ID da imagem é obrigatório." });
+            return;
+        }
 
-            const post = await PostRepository.create({ id, id_usuario, titulo, conteudo, id_imagem});
+        const imagem = await ImagemRepository.findById(id_imagem);
 
-            if(!post) {
-                res.status(400).json({ message: "Está vazio." });
-                return;  // Evita que o restante da função seja executado se um erro ocorreu.
-            }
-            res.status(201).json(post);
+        if (!imagem) {
+            res.status(404).json({ message: "Imagem não encontrada." });
+            return;
+        }
+
+        const post = await PostRepository.create({ id, id_usuario, titulo, conteudo, id_imagem });
+
+        res.status(201).json(post);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
