@@ -1,5 +1,7 @@
 const PostRepository = require('../models/PostRepository.js');
 const knex = require('../db/connection.js')
+const UsuarioRepository = require('../models/UsuarioRepository.js');
+const ImagemRepository = require('../models/ImagemRepository.js');
 
 class PostController {
     // Método para listar todos os posts
