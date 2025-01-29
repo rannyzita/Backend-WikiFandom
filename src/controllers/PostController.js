@@ -65,6 +65,7 @@ class PostController {
     // Método para atualizar um post existente
     static async updatePost(req, res) {
         try {
+            console.log("Dados recebidos para atualização:", req.body);
             const updatedPost = await PostRepository.update(req.params.id, req.body);
             if (updatedPost) {
                 res.status(200).json(updatedPost);

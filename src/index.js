@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes.js");
-const { authMiddleware } = require("./middlewares/auth.js");
 const knex = require('./db/connection.js');
 const app = express();
 
