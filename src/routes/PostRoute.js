@@ -18,6 +18,6 @@ router.put('/posts/:id', autorizacao.verificaAutorizacao, PostController.updateP
 router.delete('/posts/:id', autorizacao.verificaAutorizacao, PostController.deletePost);
 
 // encontrar um post pelo id
-router.get('/posts/:id', autorizacao.verificaAutorizacao, PostController.findByIdPost)
+router.get('/posts/:id', PostController.findByIdPost)
 
 module.exports = router;

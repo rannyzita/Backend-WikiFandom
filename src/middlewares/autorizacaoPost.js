@@ -1,23 +1,36 @@
-const PostRepository = require('../models/PostRepository.js');
+const jwt = require('jsonwebtoken');
+const PostRepository = require('../repositories/PostRepository');
 
-class AutorizacaoControle{
-    static async verificaAutorizacao(req, res, next){
-        const id_post = req.params.id;
-        try {
-            const post = await PostRepository.findById(id_post);
-            if(!post){
-                return res.status(404).json({message: 'Post não encontrado.'})
-            }
+const autorizacao = async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
 
-            if(post.user_id !== req.user.id){
-                return res.status(403).json({message: 'Sem autorização para deletar post'})
-            }
-
-            next();
-        } catch (error) {
-            return res.status(500).json({message: error.message})
-        }
+    if (!token) {
+        return res.status(401).json({ message: 'Token não fornecido' });
     }
-}
 
-module.exports = AutorizacaoControle;
+    try {
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+            throw new Error('JWT_SECRET não está configurado.');
+        }
+
+        const decoded = jwt.verify(token, secret);
+        req.user = decoded;
+
+        const post = await PostRepository.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post não encontrado' });
+        }
+
+        if (post.id_usuario !== req.usuario.id) {
+            return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir post' });
+        }
+
+        next();
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { verificaAutorizacao: autorizacao };
