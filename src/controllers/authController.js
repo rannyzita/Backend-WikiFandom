@@ -20,9 +20,10 @@ class AuthController{
             }
 
             const senhaCriptografada = await bcrypt.hash(senha, 8);
+
             await knex('Usuario').insert({
-                nome,
-                email,
+                nome: nome,
+                email: email,
                 senha: senhaCriptografada
             })
             return res.status(201).json({message: 'Usuário registrado.'});
@@ -39,9 +40,6 @@ class AuthController{
         }
 
         try{
-
-            // depois teria a comparação da senha do usuario que ele passou
-            // com a que foi gerada (criptografada)
 
             const usuario = await AuthRepository.findByEmail(email);
             if (!usuario || !(await bcrypt.compare(senha, usuario.senha))){

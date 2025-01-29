@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const PostController = require('../controllers/PostController');
-const { autorizacao } = require('../middlewares/autorizacaoPost');
+const PostController = require('../controllers/PostController.js');
+const { autorizacao } = require('../middlewares/auth.js');
 
 // Usando os métodos do controller nas rotas
 

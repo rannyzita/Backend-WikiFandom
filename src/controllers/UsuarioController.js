@@ -31,17 +31,16 @@ static async getUsuarioById(req, res) {
   // Método para criar um novo usuário
 static async createUsuario(req, res) {
 
-    const { nome , senha} = req.body;
+    const { nome } = req.body;
 
     if (!nome || typeof nome !== 'string') {
         return res.status(400).json({ message: 'nome deve ser string.' });
     }
 
-
-    // aqui deveria a geração da senha criptografa
+    const id = uuidv4();
 
     try {
-        const newUsuario = await UsuarioRepository.create(req.body);
+        const newUsuario = await UsuarioRepository.create(id, req.body);
         // status usado para indicar que algum recurso foi criado com sucesso
         res.status(201).json(newUsuario);
     } catch (err) {
