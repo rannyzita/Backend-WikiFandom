@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const routes = require("./routes.js");
 const knex = require('./db/connection.js');
+require('dotenv').config();
 const app = express();
 
 app.use(express.json());
