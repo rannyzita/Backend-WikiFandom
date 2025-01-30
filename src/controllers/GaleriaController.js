@@ -23,12 +23,11 @@ class GaleriaController{
             const imagemExistente = await GaleriaRepository.findById(id_imagem); 
             if (imagemExistente) {
                 const adicionadaNaGaleria = await GaleriaRepository.adicionarImagemNaGaleria(id_imagem, descricao); 
-                console.log(adicionadaNaGaleria); 
+                res.status(200).json({ message: 'Imagem adicionada à galeria com sucesso.' });
                 if (!adicionadaNaGaleria) {
                     return res.status(500).json({ message: 'Erro ao adicionar imagem à galeria.' });
                 }
             }
-            res.status(200).json({ message: 'Imagem adicionada à galeria com sucesso.' });
         } catch (erro) {
             console.error(erro); 
             return res.status(500).json({ message: 'Erro ao adicionar imagem à galeria.', erro });
@@ -38,7 +37,7 @@ class GaleriaController{
      // Método para deletar uma imagem por ID
     static async deleteImage(req, res){
         try{
-            const imagemId = req.params.imagemId;
+            const imagemId = req.params.id_imagem;
             const image = await GaleriaRepository.findById(imagemId);
 
             if(!image){

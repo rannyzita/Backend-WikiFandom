@@ -8,7 +8,7 @@ class GaleriaRepository {
 
     static async findById(id_imagem) {
         try {
-            const result = await knex('Imagem').where({ id: id_imagem }).first();
+            const result = await knex('Galeria').select('id').where({ id: id_imagem }).first();
             console.log("Resultado do findById:", result);
             return result;
         } catch (error) {
