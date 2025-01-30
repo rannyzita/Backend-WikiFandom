@@ -1,5 +1,5 @@
 const UsuarioRepository = require('../models/UsuarioRepository.js');
-
+const { v4: uuidv4 } = require('uuid');
 // status usados:
 // 500, 404, 400, 201
 

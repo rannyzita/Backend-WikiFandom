@@ -29,7 +29,7 @@ const autorizacao = async (req, res, next) => {
         }
 
         if (post.id_usuario !== req.user.id) {  // Corrigido 'req.usuario' para 'req.user'
-            return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir post' });
+            return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir.' });
         }
 
         next();
