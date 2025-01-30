@@ -18,10 +18,6 @@ const autorizacao = async (req, res, next) => {
         const decoded = jwt.verify(token, secret);
         req.user = decoded;
 
-        if (typeof req.params.id !== 'number') {
-            return res.status(400).json({ message: 'ID do post inválido' });
-        }
-
         const post = await PostRepository.findById(req.params.id);
 
         if (!post) {
