@@ -1,4 +1,5 @@
 const knex = require('../db/connection.js');
+const { v4: uuidv4 } = require('uuid');
 
 class GaleriaRepository {
     static async findAll() {
@@ -39,6 +40,7 @@ class GaleriaRepository {
     
         if (!imagemExistente) {
             return await knex('Galeria').insert({
+                id: uuidv4(),  // Gerando um novo id para cada imagem adicionada
                 id_imagem: idImagem,
                 descricao: decricaoImagem
             });

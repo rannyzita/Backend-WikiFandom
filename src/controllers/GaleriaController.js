@@ -19,7 +19,7 @@ class GaleriaController{
             if (!id_imagem || typeof id_imagem !== 'string') {
                 return res.status(400).json({ message: 'ID da imagem inválido.' });
             }
-    
+            
             const imagemExistente = await GaleriaRepository.findById(id_imagem); 
             if (imagemExistente) {
                 const adicionadaNaGaleria = await GaleriaRepository.adicionarImagemNaGaleria(id_imagem, descricao); 
