@@ -30,6 +30,10 @@ const authComentario = async (req, res, next) => {
         return res.status(403).json({ message: 'Somente o usuário que criou o comentário pode excluí-lo.' });
     }
 
+    if (req.method === 'PUT' && comentario.id_usuario !== req.user.id_usuario) {
+        return res.status(403).json({ message: 'Somente o usuário que criou o comentário pode atualizá-lo.' });
+    }
+
     next();
 };
 
