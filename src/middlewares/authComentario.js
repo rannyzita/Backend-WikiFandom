@@ -34,4 +34,4 @@ const authComentario = async (req, res, next) => {
     }
 };
 
-module.exports = { autorizacao }; 
+module.exports = { authComentario }; 

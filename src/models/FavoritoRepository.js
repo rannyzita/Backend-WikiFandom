@@ -18,7 +18,7 @@ class FavoritoRepository {
         if (!usuario) {
             return await 'Usuario não existe';
         }
-
+        
         if (!post) {
             return await 'Post não existe';
         }
