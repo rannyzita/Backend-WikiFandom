@@ -16,6 +16,9 @@ router.post('/comentarios', ComentarioController.createComentario);
 // deletar um comentario
 router.delete('/comentarios/:id', authComentario, ComentarioController.deleteComentario);
 
+// atualizar um comentario
+router.put('/comentarios/:id', authComentario, ComentarioController.updateComentario);
+
 module.exports = router;
 
 

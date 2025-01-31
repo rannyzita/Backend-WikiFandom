@@ -19,6 +19,10 @@ class ComentarioRepository {
         return await knex("Comentario").where('id', id).del();
     }
 
+    static async update(id, data) {
+        return await knex("Comentario").where('id', id).update(data);
+    }
+
     static async findById(id) {
         return await knex("Comentario").where('id', id).first();
     }

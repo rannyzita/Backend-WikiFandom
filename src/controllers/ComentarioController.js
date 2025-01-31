@@ -77,6 +77,33 @@ class ComentarioController {
             res.status(500).json({ error: err.message});
         }
     }
+
+    static async updateComentario(req, res) {
+        try {
+            const { id } = req.params;
+            const { conteudo } = req.body;
+
+            if (!id || typeof id!=='string') {
+                return res.status(400).json({ message: 'ID do comentário é obrigatório e deve ser uma string.' });
+            }
+
+            const comentario = await ComentarioRepository.findById(id);
+
+            if (!comentario) {
+                return res.status(404).json({ message: 'Comment not found' });
+            }
+
+            if (!conteudo || typeof conteudo!=='string') {
+                return res.status(400).json({ message: 'Conteudo do comentário é obrigatório e deve ser uma string.' });
+            }
+
+            const updatedComentario = await ComentarioRepository.update(id, { conteudo });
+
+            res.status(200).json(updatedComentario);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 }
 
 module.exports = ComentarioController;
