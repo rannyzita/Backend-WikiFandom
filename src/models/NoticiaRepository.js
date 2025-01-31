@@ -12,6 +12,10 @@ class NoticiaRepository {
     static async delete(id) {
         return await knex("Noticia").where("id", id).del();
     }
+
+    static async update(id, data) {
+        return await knex("Noticia").where("id", id).update(data);
+    }
 }
 
 module.exports = NoticiaRepository;
