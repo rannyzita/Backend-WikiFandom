@@ -1,4 +1,5 @@
 const FavoritoRepository = require('../models/FavoritoRepository.js');
+const { v4: uuidv4 } = require('uuid');
 
 class PostFavoritoController {
         static async getAllFavoritosByUserId(req, res) {
@@ -18,6 +19,7 @@ class PostFavoritoController {
             try {
                 const favorito = await FavoritoRepository.create({
                     // ADICIONAR VERIFICAÇÃO DE ENTRADA
+                    id: uuidv4(),
                     id_usuario: req.body.id_usuario,
                     id_post: req.body.id_post
                 });
