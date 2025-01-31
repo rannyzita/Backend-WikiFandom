@@ -1,8 +1,8 @@
 // autrizacaoPost.js
 const jwt = require('jsonwebtoken');
-const PostRepository = require('../models/PostRepository');
+const UsuarioRepository = require('../models/UsuarioRepository.js');
 
-const authPost = async (req, res, next) => {
+const authComentario = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -18,13 +18,13 @@ const authPost = async (req, res, next) => {
         const decoded = jwt.verify(token, secret);
         req.user = decoded;
 
-        const post = await PostRepository.findById(req.params.id);
+        const usuario = await UsuarioRepository.findById(req.params.id_usuario);
 
-        if (!post) {
-            return res.status(404).json({ message: 'Post não encontrado' });
+        if (!usuarios) {
+            return res.status(404).json({ message: 'Usuario não encontrado.' });
         }
 
-        if (post.id_usuario !== req.user.id) {  // Corrigido 'req.usuario' para 'req.user'
+        if (usuario.id_usuario !== req.user.id_usuario) {  // Corrigido 'req.usuario' para 'req.user'
             return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir.' });
         }
 
@@ -34,4 +34,4 @@ const authPost = async (req, res, next) => {
     }
 };
 
-module.exports = { authPost }; 
+module.exports = { autorizacao }; 
