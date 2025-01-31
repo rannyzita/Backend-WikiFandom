@@ -18,6 +18,10 @@ class ComentarioRepository {
     static async delete(id) {
         return await knex("Comentario").where('id', id).del();
     }
+
+    static async findById(id) {
+        return await knex("Comentario").where('id', id).first();
+    }
 }
 
 module.exports = ComentarioRepository;

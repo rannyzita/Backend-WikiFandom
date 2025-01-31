@@ -1,6 +1,5 @@
-// autrizacaoPost.js
 const jwt = require('jsonwebtoken');
-const UsuarioRepository = require('../models/UsuarioRepository.js');
+const ComentarioRepository = require('../models/ComentarioRepository.js');
 
 const authComentario = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -17,21 +16,21 @@ const authComentario = async (req, res, next) => {
 
         const decoded = jwt.verify(token, secret);
         req.user = decoded;
-
-        const usuario = await UsuarioRepository.findById(req.params.id_usuario);
-
-        if (!usuarios) {
-            return res.status(404).json({ message: 'Usuario não encontrado.' });
-        }
-
-        if (usuario.id_usuario !== req.user.id_usuario) {  // Corrigido 'req.usuario' para 'req.user'
-            return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir.' });
-        }
-
-        next();
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(401).json({ message: 'Token inválido' });
     }
+
+    const comentario = await ComentarioRepository.findById(req.params.id);
+
+    if (!comentario) {
+        return res.status(404).json({ message: 'Comentário não encontrado' });
+    }
+
+    if (req.method === 'DELETE' && comentario.id_usuario !== req.user.id_usuario) {
+        return res.status(403).json({ message: 'Somente o usuário que criou o comentário pode excluí-lo.' });
+    }
+
+    next();
 };
 
-module.exports = { authComentario }; 
+module.exports = { authComentario };
