@@ -37,7 +37,7 @@ class GaleriaController{
      // Método para deletar uma imagem por ID
     static async deleteImage(req, res){
         try{
-            const imagemId = req.params.id_imagem;
+            const imagemId = req.params.imagemId;
             const image = await GaleriaRepository.findById(imagemId);
 
             if(!image){
@@ -45,7 +45,7 @@ class GaleriaController{
             }
 
             await GaleriaRepository.delete(imagemId);
-            res.status(201).json({message: 'Erro ao deletar imagem.'});
+            res.status(201).json({message: 'Imagem deletada.'});
         } catch(erro){
             return res.status(500).json({ message: '', erro });
         }
