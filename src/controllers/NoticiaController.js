@@ -43,7 +43,7 @@ class NoticiaController {
                 return res.status(400).json({ message: 'Id da notícia não foi informado.' });
             }
 
-            const deleta = await NoticiaModel.delete(id);
+            const deleta = await NoticiaRepository.delete(id);
             if (deleta) {
                 res.json({ message: 'Notícia deletada com sucesso.' });
             } else {
