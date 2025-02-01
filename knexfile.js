@@ -1,15 +1,18 @@
 module.exports = {
     development: {
-        client: "sqlite3",
+        client: "mysql2",
         connection: {
-            filename: "./src/db/db.sqlite"
+            host: "localhost", // Remova a porta daqui e coloque no lugar certo
+            port: 3306, // Adicione a porta corretamente
+            user: "root",
+            password: "Maria0206_",
+            database: "wikifandom"
         },
         migrations: {
-            directory: "./src/db/migrations" 
+            directory: "./src/db/migrations"
         },
         seeds: {
             directory: "./src/db/seeders"
-        },
-        useNullAsDefault: true,
+        }
     }
 };
