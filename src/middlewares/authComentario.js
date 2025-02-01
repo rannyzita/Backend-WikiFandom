@@ -26,12 +26,9 @@ const authComentario = async (req, res, next) => {
         return res.status(404).json({ message: 'Comentário não encontrado' });
     }
 
-    if (req.method === 'DELETE' && comentario.id_usuario !== req.user.id_usuario) {
-        return res.status(403).json({ message: 'Somente o usuário que criou o comentário pode excluí-lo.' });
-    }
-
-    if (req.method === 'PUT' && comentario.id_usuario !== req.user.id_usuario) {
-        return res.status(403).json({ message: 'Somente o usuário que criou o comentário pode atualizá-lo.' });
+    // Check if the user is authorized to update or delete the comment
+    if (comentario.id_usuario !== req.user.id) {  
+        return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir.' });
     }
 
     next();
