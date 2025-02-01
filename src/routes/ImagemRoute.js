@@ -21,4 +21,7 @@ router.post('/imagens', ImagemController.createImagem);
 // deleta uma imagem
 router.delete('/imagens/:id', ImagemController.deleteImagem);
 
+// atualiza uma imagem
+router.put('/imagens/:id', ImagemController.updateImagem);
+
 module.exports = router;

@@ -76,6 +76,38 @@ class ImagemController {
             return res.status(500).json({ message: 'Erro ao verificar imagens.', erro });
         }
     }
+
+    // Metódo para atualizar uma imagem
+    static async updateImagem(req, res) {
+        try {
+            const { id } = req.params;
+            const { titulo, url_post, categoria } = req.body;
+
+            if (!id) {
+                return res.status(400).json({ message: 'Id da imagem não foi informado.' });
+            }
+
+            if (!titulo || typeof titulo!=='string') {
+                return res.status(400).json({ message: 'Título inválido.' });
+            }
+            if (!url_post || typeof url_post!=='string') {
+                return res.status(400).json({ message: 'URL inválida.' });
+            }
+            if (!categoria || typeof categoria!=='string') {
+                return res.status(400).json({ message: 'Categoria inválida.' });
+            }
+
+            const atualizado = await ImagemRepository.update(id, { titulo, url_post, categoria });
+            
+            if (atualizado) {
+                res.json({ message: 'Imagem atualizada com sucesso.' })
+            } else {
+                res.status(404).json({ message: 'Imagem não encontrada.' });
+            }
+        } catch (err) {
+            return res.status(500).json({ message: 'Erro ao atualizar imagem.', error: err.message });
+        }
+    }
 }
 
 module.exports = ImagemController;

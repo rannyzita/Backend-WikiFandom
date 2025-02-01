@@ -16,6 +16,10 @@ class ImagemRepository {
     static async findAll() {
         return await knex("Imagem").select();
     }
+
+    static async update(id, data) {
+        return await knex("Imagem").where("id", id).update(data);
+    }
 }
 
 module.exports = ImagemRepository;
