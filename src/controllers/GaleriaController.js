@@ -19,16 +19,15 @@ class GaleriaController{
             if (!id_imagem || typeof id_imagem !== 'string') {
                 return res.status(400).json({ message: 'ID da imagem inválido.' });
             }
-    
+            
             const imagemExistente = await GaleriaRepository.findById(id_imagem); 
             if (imagemExistente) {
                 const adicionadaNaGaleria = await GaleriaRepository.adicionarImagemNaGaleria(id_imagem, descricao); 
-                console.log(adicionadaNaGaleria); 
+                res.status(200).json({ message: 'Imagem adicionada à galeria com sucesso.' });
                 if (!adicionadaNaGaleria) {
                     return res.status(500).json({ message: 'Erro ao adicionar imagem à galeria.' });
                 }
             }
-            res.status(200).json({ message: 'Imagem adicionada à galeria com sucesso.' });
         } catch (erro) {
             console.error(erro); 
             return res.status(500).json({ message: 'Erro ao adicionar imagem à galeria.', erro });
@@ -46,7 +45,7 @@ class GaleriaController{
             }
 
             await GaleriaRepository.delete(imagemId);
-            res.status(201).json({message: 'Erro ao deletar imagem.'});
+            res.status(201).json({message: 'Imagem deletada.'});
         } catch(erro){
             return res.status(500).json({ message: '', erro });
         }

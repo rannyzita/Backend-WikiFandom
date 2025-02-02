@@ -13,6 +13,11 @@ class AuthRepository{
     static async create(data){
         return await knex('Usuario').insert(data)
     }
+
+    static async findSenha({email, senha}){
+        const [usuario] = await knex('Usuario').where('email', email).select('senha');
+        return usuario ? usuario.senha : null;
+    }
 }
 
 module.exports = AuthRepository;

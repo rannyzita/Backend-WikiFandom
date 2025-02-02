@@ -1,25 +1,19 @@
-const express = require("express");
-
-const authMiddleware = require("./middlewares/auth.js");
+const express = require('express');
 
 const authController = require("./controllers/AuthController.js");
 const routeUsuario = require("./routes/UsuarioRoute.js");
-const routeHistorico = require("./routes/HistoricoRoute.js")
+const routeHistorico = require("./routes/HistoricoRoute.js");
 const routeImagem = require("./routes/ImagemRoute.js");
 const routePost = require("./routes/PostRoute.js");
 const routeGaleria = require("./routes/GaleriaRoute.js");
 const routeFavorito = require("./routes/PostFavoritoRoute.js");
 const routeComentario = require("./routes/ComentarioRoute.js");
 const routeNoticia = require("./routes/NoticiaRoute.js");
+const routeAuth = require("./routes/authRoutes.js");
 
 const router = express.Router();
 
-router.post('/registro', authController.registro);
-router.post('/login', authController.login);
-
-router.use(authMiddleware);
-
-// Rotas
+// As rotas devem ser funções, e não objetos
 const routes = [
     { name: 'Usuario', route: routeUsuario },
     { name: 'Historico', route: routeHistorico },
@@ -28,7 +22,8 @@ const routes = [
     { name: 'Galeria', route: routeGaleria },
     { name: 'Favorito', route: routeFavorito },
     { name: 'Comentario', route: routeComentario },
-    { name: 'Noticia', route: routeNoticia }
+    { name: 'Noticia', route: routeNoticia },
+    { name: 'Auth', route: routeAuth}
 ];
 
 routes.forEach(({ name, route }) => {

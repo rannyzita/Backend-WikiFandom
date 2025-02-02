@@ -1,11 +1,14 @@
 const UsuarioRepository = require('../models/UsuarioRepository.js');
+const { v4: uuidv4 } = require('uuid');
+// status usados:
+// 500, 404, 400, 201
 
 class UsuarioController {
   // Método para listar todos os usuários
 static async getAllUsuarios(req, res) {
     try {
         const usuarios = await UsuarioRepository.findAll();
-        res.json(usuarios);
+        res.status(200).json(usuarios);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -16,9 +19,9 @@ static async getUsuarioById(req, res) {
     try {
         const usuario = await UsuarioRepository.findById(req.params.id);
         if (usuario) {
-            res.json(usuario);
+            res.status(200).json(usuario);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'Usuário nao encontrado' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -28,8 +31,16 @@ static async getUsuarioById(req, res) {
   // Método para criar um novo usuário
 static async createUsuario(req, res) {
 
+    const { nome } = req.body;
+
+    if (!nome || typeof nome !== 'string') {
+        return res.status(400).json({ message: 'nome deve ser string.' });
+    }
+
+    const id = uuidv4();
+
     try {
-        const newUsuario = await UsuarioRepository.create(req.body);
+        const newUsuario = await UsuarioRepository.create(id, req.body);
         // status usado para indicar que algum recurso foi criado com sucesso
         res.status(201).json(newUsuario);
     } catch (err) {
@@ -42,9 +53,9 @@ static async updateUsuario(req, res) {
     try {
         const updatedUsuario = await UsuarioRepository.update(req.params.id, req.body);
         if (updatedUsuario) {
-            res.json(updatedUsuario);
+            res.status(200).json(updatedUsuario);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'Usuário não encontrado' });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -60,49 +71,12 @@ static async updateUsuario(req, res) {
                 // mas sem retorno de algo
                 res.status(204).end();
             } else {
-                res.status(404).json({ message: 'User not found' });
+                res.status(404).json({ message: 'Usuário não encontrado.' });
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     }
-
-//Adicionando metódos para atualizar e deletar perfil segundo requisitos
- /*   static async atualizarPerfil(req, res){
-        try {
-            const id_usuario = req.usuario.id;
-            const {nome, email, foto_perfil} = req.body;
-
-            const dadosAtualizados = {nome, email, foto_perfil}
-            if (nome)dadosAtualizados.nome = nome;
-            if(email)dadosAtualizados.email = email;
-            if(foto_perfil)dadosAtualizados.foto_perfil = foto_perfil;
-
-            const atualizarUsuario = await UsuarioRepository.update(id_usuario, req.body);
-            if (atualizarUsuario) {
-                res.json(atualizarUsuario);
-            } else {
-                res.status(404).json({ message: 'Usuário não foi encontrado' });
-            }
-        } catch (erro) {
-            res.status(500).json({message: erro.message});
-        }
-    }
-
-    static async deletarPerfil(req, res){
-        try{
-            const id_usuario = req.usuario.id;
-            const deletarUsuario = await UsuarioRepository.delete(id_usuario);
-            if(deletarUsuario){
-                res.status(204).end();
-            } else{
-                res.status(404).json({message: 'Usuário não foi encontrado'});
-            }
-        } catch (erro){
-            res.status(500).json({message: erro.message});
-        }
-    }*/
-
 }
 
 module.exports = UsuarioController;

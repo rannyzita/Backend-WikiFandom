@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes.js");
-const { authMiddleware } = require("./middlewares/auth.js");
 const knex = require('./db/connection.js');
+require('dotenv').config();
 const app = express();
 
 //docs api
@@ -14,7 +14,6 @@ app.use(express.json());
 app.use(cors());
 
 app.use(routes);
-
 
 // Iniciar o servidor
 const PORT = 3333;

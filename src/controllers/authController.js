@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt'); // hash de senhas, em resumo importa um método para criptografar senhas
 const jwt = require('jsonwebtoken'); // tokens JWT (validar acesso do usuário)
 const knex = require('../db/connection.js'); // importa o banco de dados que foi configurado com knex
+const { v4: uuidv4 } = require('uuid');
 const AuthRepository = require('../models/AuthRepository.js')
 
-class AuthController{
-    // (req)uisição e (res)posta
+class AuthController{   
     // promises
     async registro (req, res){
         const {nome, email, senha} = req.body;
@@ -20,9 +20,11 @@ class AuthController{
             }
 
             const senhaCriptografada = await bcrypt.hash(senha, 8);
+
             await knex('Usuario').insert({
-                nome,
-                email,
+                id: uuidv4(),
+                nome: nome,
+                email: email,
                 senha: senhaCriptografada
             })
             return res.status(201).json({message: 'Usuário registrado.'});
@@ -32,15 +34,18 @@ class AuthController{
     }
 
     async login(req, res){
-        const {email, senha} = req.body;
+        const { email, senha } = req.body;
 
         if (!email || !senha){
             return res.status(400).json({message: 'Email e senha obrigatórios'});
         }
 
         try{
+
             const usuario = await AuthRepository.findByEmail(email);
-            if (!usuario || !(await bcrypt.compare(senha, usuario.senha))){
+            const senhaEncontrada = await AuthRepository.findSenha({email, senha});
+
+            if (!usuario || !(await bcrypt.compare(senha, senhaEncontrada))){
                 return res.status(401).json({message: 'Credenciais inválidas'})
             }
 
@@ -63,6 +68,7 @@ class AuthController{
             return res.json({token});
         
         } catch (erro){
+            console.error('Erro ao realizar login:', erro);  // logar os erros no console para melhor diagnóstico
             return res.status(500).json({ message: 'Erro ao realizar seu login', erro});
         }
     }

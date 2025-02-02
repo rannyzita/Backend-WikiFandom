@@ -1,5 +1,8 @@
 const PostRepository = require('../models/PostRepository.js');
 const knex = require('../db/connection.js')
+const { v4: uuidv4 } = require('uuid');
+const UsuarioRepository = require('../models/UsuarioRepository.js');
+const ImagemRepository = require('../models/ImagemRepository.js');
 
 class PostController {
     // Método para listar todos os posts
@@ -11,12 +14,49 @@ class PostController {
             res.status(500).json({ error: err.message });
         }
     }
+    
+    // encontrar um post especifico pelo id
+    static async findByIdPost(req, res) {
+        try {
+            const post = await PostRepository.findById(req.params.id);
+            if (post) {
+                res.status(200).json(post);
+            } else {
+                res.status(404).json({ message: "Post não encontrado" });
+            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 
     // Método para adicionar um novo post
     static async createPost(req, res) {
         try {
-            const post = await PostRepository.create(req.body);
-            res.status(201).json(post);
+        const { id_usuario, titulo, conteudo, id_imagem } = req.body;
+        const id = uuidv4();
+
+        const usuario = await UsuarioRepository.findById(id_usuario);
+
+        if (!usuario) {
+            res.status(404).json({ message: "Usuário não encontrado." });
+            return;
+        }
+
+        if (!id_imagem) {
+            res.status(400).json({ message: "ID da imagem é obrigatório." });
+            return;
+        }
+
+        const imagem = await ImagemRepository.findById(id_imagem);
+
+        if (!imagem) {
+            res.status(404).json({ message: "Imagem não encontrada." });
+            return;
+        }
+
+        const post = await PostRepository.create({ id, id_usuario, titulo, conteudo, id_imagem });
+
+        res.status(201).json(post);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -25,9 +65,10 @@ class PostController {
     // Método para atualizar um post existente
     static async updatePost(req, res) {
         try {
+            console.log("Dados recebidos para atualização:", req.body);
             const updatedPost = await PostRepository.update(req.params.id, req.body);
             if (updatedPost) {
-                res.json(updatedPost);
+                res.status(200).json(updatedPost);
             } else {
                 res.status(404).json({ message: "Post not found" });
             }
@@ -47,51 +88,6 @@ class PostController {
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
-        }
-    }
-
-    // Adicionando (Busca de posts por título ou conteúdo) - 22/01
-    static async buscarPost(req, res) {
-        // parâmetro
-        const {query} = req.query;
-        if (!query){
-            return res.status(400).json({message: "É necessário informar o termo de busca"});
-        }
-
-        try{
-            //parte do banco de dados
-            const post  = await knex('Post').where('titulo', 'like', `%${query}%`).orWhere('conteudo', 'like', `%${query}%`);
-            return res.json(post);
-        } catch(e){
-            return res.status(500).json({error: e.message})
-        }
-    }
-
-    // Adicionando Comentários em Post
-    static async addComentarioPost(req, res) {
-        // para eu fazer um comentário eu tenho que ter um id(cliente) e um conteúdo(mensagem)
-        const {id} = req.params; 
-        const {conteudo, IdUsuario} = req.body;
-
-        if(!conteudo || !IdUsuario){
-            return res.status(400).json({message: 'É preciso estar logado e ter conteúdo em sua mensagem para realizar um comentário'});
-        }
-
-        try{
-            const verificarPost = await knex('Post').where('id', id).first();
-            if(!verificarPost){
-                return res.status(400).json({message: 'Post não existente.'})
-            } 
-
-            await knex ('Comentario').insert({
-                conteudo,
-                id_usuario: IdUsuario,
-                id_post : id,
-                data_enviada:  knex.fn.now()
-            })
-            return res.status(201).json({message: 'Comentário adicionado.'})
-        } catch(e){
-            return res.status(500).json({error: e.message})
         }
     }
 }

@@ -1,4 +1,7 @@
+const knex = require('../db/connection.js');
 const ComentarioRepository = require('../models/ComentarioRepository.js')
+const UsuarioRepository = require('../models/UsuarioRepository.js');
+const { v4: uuidv4 } = require('uuid');
 
 class ComentarioController {
     // Método para listar todos os comentarios
@@ -27,11 +30,18 @@ class ComentarioController {
     static async createComentario(req, res) {
         try {
             const { id_post, conteudo, id_usuario } = req.body;
-    
+            const id = uuidv4();
+
             if (!id_post || typeof id_post !== 'string') {
                 return res.status(400).json({ message: 'ID do post é obrigatório e deve ser uma string.' });
             }
-    
+
+            const post = await knex("Post").where("id", id_post).first();
+            
+            if (!post) {
+                return res.status(404).json({ message: "Post não encontrado" });
+            }
+
             if (!conteudo || typeof conteudo !== 'string') {
                 return res.status(400).json({ message: 'Conteudo do comentário é obrigatório e deve ser uma string.' });
             }
@@ -39,8 +49,14 @@ class ComentarioController {
             if (!id_usuario || typeof id_usuario !== 'string') {
                 return res.status(400).json({ message: 'id do usuário é obrigatório e deve ser uma string.' });
             }
-    
-            const newComentario = await ComentarioRepository.create({ id_post, conteudo, id_usuario});
+
+            const Usuario = await UsuarioRepository.findById(id_usuario);
+
+            if (!Usuario) {
+                return res.status(404).json({ message: "Usuário não encontrado" });
+            }
+
+            const newComentario = await ComentarioRepository.create({ id, id_post, conteudo, id_usuario});
             res.status(201).json(newComentario);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -59,6 +75,33 @@ class ComentarioController {
             }
         } catch (err) {
             res.status(500).json({ error: err.message});
+        }
+    }
+
+    static async updateComentario(req, res) {
+        try {
+            const { id } = req.params;
+            const { conteudo } = req.body;
+
+            if (!id || typeof id!=='string') {
+                return res.status(400).json({ message: 'ID do comentário é obrigatório e deve ser uma string.' });
+            }
+
+            const comentario = await ComentarioRepository.findById(id);
+
+            if (!comentario) {
+                return res.status(404).json({ message: 'Comment not found' });
+            }
+
+            if (!conteudo || typeof conteudo!=='string') {
+                return res.status(400).json({ message: 'Conteudo do comentário é obrigatório e deve ser uma string.' });
+            }
+
+            const updatedComentario = await ComentarioRepository.update(id, { conteudo });
+
+            res.status(200).json(updatedComentario);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
     }
 }
