@@ -1,158 +1,492 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Documentação API de WikiFandom",
-      "version": "1.0.0",
-      "description": "Documentação da API"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de WikiFandom",
+    "description": "API para gerenciar funcionalidades de uma página de WikiFandom.",
+    "termsOfService": "http://localhost:3333/terms",
+    "contact": {
+      "name": "Equipe WikiFandom",
+      "email": "luluzitaslevk@gmail.com",
+      "url": "https://wikifandom.com/suporte"
     },
-    "servers": [
-      {
-        "url": "http://localhost:3333",
-        "description": "Servidor local"
-      }
-    ],
-    "paths": {
-      "/registro": {
-        "post": {
-          "summary": "Registro de Usuário",
-          "description": "Registra um novo usuário no sistema.",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "nome": {
-                      "type": "string",
-                      "example": "João Silva"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "joao.silva@example.com"
-                    },
-                    "senha": {
-                      "type": "string",
-                      "example": "senha123"
-                    }
-                  },
-                  "required": ["nome", "email", "senha"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Usuário registrado com sucesso.",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "message": "Usuário registrado."
-                  }
-                }
-              }
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "Servidor de Teste"
+    },
+    {
+      "url": "https://github.com/rannyzita/Backend-WikiFandom.git",
+      "description": "Servidor de Produção"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Usuários",
+      "description": "Gerenciamento de usuários (cadastro, login, etc.)"
+    },
+    {
+      "name": "Comentários",
+      "description": "Operações relacionadas a comentários"
+    },
+    {
+      "name": "Imagem",
+      "description": "Gerenciamento de imagens"
+    },
+    {
+      "name": "Galeria",
+      "description": "Gerenciamento da galeria de imagens"
+    },
+    {
+      "name": "Histórico de Pesquisa",
+      "description": "Gerenciamento do histórico de pesquisas do usuário"
+    },
+    {
+      "name": "Notícias",
+      "description": "Gerenciamento de notícias"
+    },
+    {
+      "name": "Post",
+      "description": "Gerenciamento de Posts"
+    }
+
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/registro": {
+      "post": {
+        "tags": ["Usuários"],
+        "summary": "Registro de Usuário",
+        "description": "Registra um novo usuário no sistema.",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegistroUsuario" }
             },
-            "400": {
-              "description": "Erro na requisição, campos obrigatórios ausentes ou usuário já existe.",
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "campos_ausentes": {
-                      "summary": "Campos obrigatórios ausentes",
-                      "value": {"message": "Todos campos são obrigatórios!"}
-                    },
-                    "usuario_existente": {
-                      "summary": "Usuário já existe",
-                      "value": {"message": "Usuário já existe."}
-                    }
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Erro interno do servidor ao registrar usuário.",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "message": "Erro ao registrar usuário.",
-                    "erro": {}
-                  }
+            "examples": {
+              "registro": {
+                "value" :{
+                  "nome": "Arthur",
+                  "email": "arthur@gmail.com",
+                  "senha": "123456"
                 }
               }
             }
           }
+        },
+        "responses": {
+          "400": { 
+            "description": "Um ou mais campos estão inválidos ou Usuário já existe." 
+          },
+          "500": {
+            "description": "Erro ao registrar usuário." 
+           },
+          "201": {
+            "description": "Usuário registrado com sucesso." ,
+            "content": {
+              "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/RegistroUsuario"
+              }
+              }
+            }
+          }
+        } 
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Usuários"],
+        "summary": "Login de Usuário",
+        "description": "Realiza o login de um usuário e retorna um token JWT.",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginUsuario" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login realizado com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "401": { "description": "Credenciais inválidas." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/comentarios": {
+      "get": {
+        "tags": ["Comentários"],
+        "summary": "Listar todos os comentários",
+        "description": "Retorna todos os comentários cadastrados.",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": { "description": "Lista de comentários." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       },
-      "/login": {
-        "post": {
-          "summary": "Login de Usuário",
-          "description": "Realiza o login de um usuário e retorna um token JWT.",
-          "requestBody": {
+      "post": {
+        "tags": ["Comentários"],
+        "summary": "Criar um novo comentário",
+        "description": "Cria um novo comentário associado a um post.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NovoComentario" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Comentário criado com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/comentarios/{id}": {
+      "delete": {
+        "tags": ["Comentários"],
+        "summary": "Excluir um comentário",
+        "description": "Exclui um comentário pelo seu ID.",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
             "required": true,
+            "description": "ID único do comentário a ser excluído.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Comentário excluído com sucesso." },
+          "404": { "description": "Comentário não encontrado." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/imagens": {
+      "post": {
+        "tags": ["Imagem"],
+        "summary": "Adicionar uma nova imagem",
+        "description": "Adiciona uma nova imagem ao sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NovaImagem" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Imagem adicionada com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      },
+      "get": {
+        "tags": ["Imagem"],
+        "summary": "Listar todas as imagens",
+        "description": "Retorna todas as imagens cadastradas no sistema.",
+        "responses": {
+          "200": { "description": "Lista de imagens." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/imagens/{id}": {
+      "delete": {
+        "tags": ["Imagem"],
+        "summary": "Excluir uma imagem",
+        "description": "Remove uma imagem do sistema pelo seu ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único da imagem a ser excluída.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Imagem excluída com sucesso." },
+          "404": { "description": "Imagem não encontrada." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/galeria": {
+      "post": {
+        "tags": ["Galeria"],
+        "summary": "Adicionar imagem à galeria",
+        "description": "Adiciona uma imagem existente a uma galeria específica.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdicionarImagemGaleria" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Imagem adicionada à galeria com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      },
+      "get": {
+        "tags": ["Galeria"],
+        "summary": "Listar imagens da galeria",
+        "description": "Retorna todas as imagens de uma galeria específica.",
+        "parameters": [
+          {
+            "name": "id_galeria",
+            "in": "query",
+            "required": true,
+            "description": "ID da galeria para listar as imagens.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Lista de imagens da galeria." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/galeria/{id}": {
+      "delete": {
+        "tags": ["Galeria"],
+        "summary": "Excluir imagem da galeria",
+        "description": "Remove uma imagem da galeria pelo seu ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da imagem a ser removida da galeria.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Imagem removida da galeria com sucesso." },
+          "404": { "description": "Imagem não encontrada na galeria." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/historico": {
+      "get": {
+        "tags": ["Histórico de Pesquisa"],
+        "summary": "Listar todo o histórico de pesquisa",
+        "description": "Retorna todo o histórico de pesquisa associado ao usuário autenticado.",
+        "responses": {
+          "200": {
+            "description": "Histórico de pesquisa retornado com sucesso.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string",
-                      "example": "joao.silva@example.com"
-                    },
-                    "senha": {
-                      "type": "string",
-                      "example": "senha123"
-                    }
-                  },
-                  "required": ["email", "senha"]
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricoPesquisa"
+                  }
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Login realizado com sucesso.",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Erro na requisição, email ou senha não fornecidos.",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "message": "Email e senha obrigatórios"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Credenciais inválidas.",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "message": "Credenciais inválidas"
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Erro interno do servidor ao realizar login.",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "message": "Erro ao realizar seu login",
-                    "erro": {}
-                  }
-                }
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      },
+      "post": {
+        "tags": ["Histórico de Pesquisa"],
+        "summary": "Criar histórico de pesquisa",
+        "description": "Cria um novo registro de histórico de pesquisa para o usuário.",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricoPesquisa"
               }
             }
           }
+        },
+        "responses": {
+          "201": { "description": "Histórico de pesquisa criado com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/noticias": {
+      "get": {
+        "tags": ["Notícias"],
+        "summary": "Listar todas as notícias",
+        "description": "Retorna todas as notícias cadastradas.",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": { "description": "Lista de notícias." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      },
+      "post": {
+        "tags": ["Notícias"],
+        "summary": "Criar uma nova notícia",
+        "description": "Cria uma nova notícia no sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NovaNoticia" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Notícia criada com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/noticias/{id}": {
+      "get": {
+        "tags": ["Notícias"],
+        "summary": "Obter detalhes de uma notícia",
+        "description": "Retorna detalhes de uma notícia específica.",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único da notícia.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Detalhes da notícia." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      },
+      "delete": {
+        "tags": ["Notícias"],
+        "summary": "Excluir uma notícia",
+        "description": "Remove uma notícia pelo ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único da notícia a ser excluída.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Notícia excluída com sucesso." },
+          "404": { "description": "Notícia não encontrada." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "RegistroUsuario": {
+        "type": "object",
+        "properties": {
+          "nome": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "senha": { "type": "string", "minLength": 6 }
+        },
+        "required": ["nome", "email", "senha"]
+      },
+      "LoginUsuario": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "senha": { "type": "string", "minLength": 6 }
+        },
+        "required": ["email", "senha"]
+      },
+      "NovoComentario": {
+        "type": "object",
+        "properties": {
+          "texto": { "type": "string" },
+          "usuario_id": { "type": "integer" },
+          "post_id": { "type": "integer" }
+        },
+        "required": ["texto", "usuario_id", "post_id"]
+      },
+      "NovaImagem": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "descricao": { "type": "string" }
+        },
+        "required": ["url"]
+      },
+      "AdicionarImagemGaleria": {
+        "type": "object",
+        "properties": {
+          "imagem_id": { "type": "string" },
+          "galeria_id": { "type": "string" }
+        },
+        "required": ["imagem_id", "galeria_id"]
+      },
+      "HistoricoPesquisa": {
+        "type": "object",
+        "properties": {
+          "usuario_id": { "type": "string" },
+          "pesquisa": { "type": "string" },
+          "data": { "type": "string", "format": "date-time" }
+        },
+        "required": ["usuario_id", "pesquisa", "data"]
+      },
+      "NovaNoticia": {
+        "type": "object",
+        "properties": {
+          "titulo": { "type": "string" },
+          "conteudo": { "type": "string" },
+          "data_publicacao": { "type": "string", "format": "date-time" }
+        },
+        "required": ["titulo", "conteudo", "data_publicacao"]
+      },
+      "NovoPost": {
+        "type": "object",
+        "properties": {
+          "titulo": { "type": "string" },
+          "conteudo": { "type": "string" },
+          "autor": { "type": "string" }
+        },
+        "required": ["titulo", "conteudo", "autor"]
+      }
+    },
+    "responses": {
+      "ErroPadrao": {
+        "description": "Erro geral do sistema."
+      }
+    }
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
   }
-  
+}
