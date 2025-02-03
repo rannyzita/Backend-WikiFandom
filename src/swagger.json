@@ -53,8 +53,11 @@
     {
       "name": "Post",
       "description": "Gerenciamento de Posts"
+    },
+    {
+      "name": "Post Favorito",
+      "description": "Gerenciamento de Posts Favoritos" 
     }
-
   ],
   "security": [
     {
@@ -117,69 +120,164 @@
           "content": {
             "application/json": {
               "schema": { "$ref": "#/components/schemas/LoginUsuario" }
+            },
+            "examples": {
+              "registro": {
+                "value" :{
+                  "email": "arthur@gmail.com",
+                  "senha": "123456"
+                }
+              }
             }
           }
         },
         "responses": {
-          "200": { "description": "Login realizado com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "401": { "description": "Credenciais inválidas." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
+          "400": {
+            "description": "Email e senha obrigatórios" 
+          },
+          "500": {
+            "description": "Erro ao realizar seu login"
+          },
+          "401": {
+            "description": "Credenciais inválidas." 
+          },
+          "200": {
+            "description": "Login realizado com sucesso." 
+          }
         }
       }
     },
-    "/comentarios": {
-      "get": {
-        "tags": ["Comentários"],
-        "summary": "Listar todos os comentários",
-        "description": "Retorna todos os comentários cadastrados.",
-        "security": [{"bearerAuth": []}],
-        "responses": {
-          "200": { "description": "Lista de comentários." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      },
-      "post": {
-        "tags": ["Comentários"],
-        "summary": "Criar um novo comentário",
-        "description": "Cria um novo comentário associado a um post.",
-        "requestBody": {
-          "required": true,
+   "/comentarios": {
+    "get": {
+      "tags": ["Comentários"],
+      "summary": "Listar todos os comentários",
+      "description": "Retorna todos os comentários cadastrados.",
+      "security": [{"bearerAuth": []}],
+      "responses": {
+        "200": {
+          "description": "Lista de comentários.",
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/NovoComentario" }
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Comentario"
+                }
+              }
+            }
+          }
+        },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
+    },
+    "post": {
+      "tags": ["Comentários"],
+      "summary": "Criar um novo comentário",
+      "description": "Cria um novo comentário associado a um post.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/NovoComentario" },
+            "examples": {
+              "comentario": {
+                "value": {
+                  "conteudo": "Esse é um ótimo post!",
+                  "id_usuario": "1",
+                  "id_post": "1"
+                }
+              }
             }
           }
         },
         "responses": {
-          "201": { "description": "Comentário criado com sucesso." },
+          "201": {
+            "description": "Comentário criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Comentario" }
+              }
+            }
+          },
           "400": { "$ref": "#/components/responses/ErroPadrao" },
           "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       }
+    }
+  },
+  "/comentarios/{id}": {
+    "delete": {
+      "tags": ["Comentários"],
+      "summary": "Excluir um comentário",
+      "description": "Exclui um comentário pelo seu ID.",
+      "security": [{"bearerAuth": []}],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID único do comentário a ser excluído.",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Comentário excluído com sucesso."
+        },
+        "404": {
+          "description": "Comentário não encontrado."
+        },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
     },
-    "/comentarios/{id}": {
-      "delete": {
-        "tags": ["Comentários"],
-        "summary": "Excluir um comentário",
-        "description": "Exclui um comentário pelo seu ID.",
-        "security": [{"bearerAuth": []}],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID único do comentário a ser excluído.",
-            "schema": { "type": "string" }
+    "put": {
+      "tags": ["Comentários"],
+      "summary": "Atualizar um comentário",
+      "description": "Atualiza o conteúdo de um comentário pelo seu ID.",
+      "security": [{"bearerAuth": []}],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID único do comentário a ser atualizado.",
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ComentarioAtualizado"
+            },
+            "examples": {
+              "comentarioAtualizado": {
+                "value": {
+                  "conteudo": "Novo conteúdo do comentário."
+                }
+              }
+            }
           }
-        ],
+        },
         "responses": {
-          "204": { "description": "Comentário excluído com sucesso." },
-          "404": { "description": "Comentário não encontrado." },
+          "200": {
+            "description": "Comentário atualizado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Comentario" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "404": {
+            "description": "Comentário não encontrado."
+          },
           "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       }
-    },
+    }
+  },
     "/imagens": {
       "post": {
         "tags": ["Imagem"],
@@ -402,8 +500,179 @@
           "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       }
+    },
+    "/post": {
+        "get": {
+          "tags": ["Post"],
+          "summary": "Listar todos os posts",
+          "description": "Retorna todos os posts cadastrados.",
+          "responses": {
+            "200": { "description": "Lista de posts." },
+            "500": { "$ref": "#/components/responses/ErroPadrao" }
+          }
+        }
+      },
+      "/createPost": {
+        "post": {
+          "tags": ["Post"],
+          "summary": "Criar um novo post",
+          "description": "Cria um novo post associado a um usuário e imagem.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NovoPost" }
+              }
+            }
+          },
+          "responses": {
+            "201": { "description": "Post criado com sucesso." },
+            "400": { "$ref": "#/components/responses/ErroPadrao" },
+            "500": { "$ref": "#/components/responses/ErroPadrao" }
+          }
+        }
+      },
+      "/updatePost/{id}": {
+        "put": {
+          "tags": ["Post"],
+          "summary": "Atualizar um post",
+          "description": "Atualiza os dados de um post.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "ID do post a ser atualizado.",
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NovoPost" }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Post atualizado com sucesso." },
+            "400": { "$ref": "#/components/responses/ErroPadrao" },
+            "500": { "$ref": "#/components/responses/ErroPadrao" }
+          }
+        }
+      },
+      "/deletePost/{id}": {
+        "delete": {
+          "tags": ["Post"],
+          "summary": "Excluir um post",
+          "description": "Remove um post do sistema pelo seu ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "ID do post a ser excluído.",
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "204": { "description": "Post excluído com sucesso." },
+            "404": { "description": "Post não encontrado." },
+            "500": { "$ref": "#/components/responses/ErroPadrao" }
+          }
+        }
+      },
+      "/favoritos/{id}": {
+  "get": {
+    "tags": ["Post Favorito"],
+    "summary": "Listar todos os favoritos de um usuário",
+    "description": "Retorna todos os favoritos de um usuário específico, identificado pelo ID do usuário.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID do usuário para buscar seus favoritos.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Lista de favoritos do usuário." },
+      "404": { "description": "Favoritos não encontrados." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  }
+},
+  "/favoritos": {
+    "post": {
+      "tags": ["Post Favorito"],
+      "summary": "Criar um novo favorito",
+      "description": "Associa um post a um usuário, criando um novo favorito.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_post": { "type": "string" },
+                "id_usuario": { "type": "string" }
+              },
+              "required": ["id_post", "id_usuario"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": { "description": "Favorito criado com sucesso." },
+        "400": { "description": "Dados inválidos ou ausentes no corpo da requisição." },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
+    },
+    "delete": {
+      "tags": ["Post Favorito"],
+      "summary": "Excluir um favorito",
+      "description": "Remove um favorito específico de um usuário.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_post": { "type": "string" },
+                "id_usuario": { "type": "string" }
+              },
+              "required": ["id_post", "id_usuario"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "204": { "description": "Favorito excluído com sucesso." },
+        "404": { "description": "Favorito não encontrado." },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
     }
   },
+  "components": {
+    "responses": {
+      "ErroPadrao": {
+        "description": "Erro inesperado no servidor.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  },    
   "components": {
     "schemas": {
       "RegistroUsuario": {
@@ -470,10 +739,19 @@
         "type": "object",
         "properties": {
           "titulo": { "type": "string" },
-          "conteudo": { "type": "string" },
-          "autor": { "type": "string" }
+          "descricao": { "type": "string" },
+          "usuarioId": { "type": "string" },
+          "imagemId": { "type": "string" }
         },
-        "required": ["titulo", "conteudo", "autor"]
+        "required": ["titulo", "descricao", "usuarioId", "imagemId"]
+      },
+      "PostFavoritos":{
+        "type": "object",
+        "properties": {
+          "id_post": { "type": "string" },
+          "id_usuario": { "type": "string" }
+        },
+        "required": ["id_post", "id_usuario"]
       }
     },
     "responses": {
