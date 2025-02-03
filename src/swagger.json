@@ -31,13 +31,18 @@
       "description": "Gerenciamento de usuários (cadastro, login, etc.)"
     },
     {
-      "name": "Comentários",
-      "description": "Operações relacionadas a comentários"
-    },
-    {
       "name": "Imagem",
       "description": "Gerenciamento de imagens"
     },
+    {
+      "name": "Post",
+      "description": "Gerenciamento de Posts"
+    },
+    {
+      "name": "Comentários",
+      "description": "Operações relacionadas a comentários"
+    },
+   
     {
       "name": "Galeria",
       "description": "Gerenciamento da galeria de imagens"
@@ -49,10 +54,6 @@
     {
       "name": "Notícias",
       "description": "Gerenciamento de notícias"
-    },
-    {
-      "name": "Post",
-      "description": "Gerenciamento de Posts"
     },
     {
       "name": "Post Favorito",
@@ -147,7 +148,138 @@
         }
       }
     },
-   "/comentarios": {
+    "/imagens": {
+      "post": {
+        "tags": ["Imagem"],
+        "summary": "Adicionar uma nova imagem",
+        "description": "Adiciona uma nova imagem ao sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NovaImagem" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Imagem adicionada com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      },
+      "get": {
+        "tags": ["Imagem"],
+        "summary": "Listar todas as imagens",
+        "description": "Retorna todas as imagens cadastradas no sistema.",
+        "responses": {
+          "200": { "description": "Lista de imagens." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/imagens/{id}": {
+      "delete": {
+        "tags": ["Imagem"],
+        "summary": "Excluir uma imagem",
+        "description": "Remove uma imagem do sistema pelo seu ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único da imagem a ser excluída.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Imagem excluída com sucesso." },
+          "404": { "description": "Imagem não encontrada." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/post": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Listar todos os posts",
+        "description": "Retorna todos os posts cadastrados.",
+        "responses": {
+          "200": { "description": "Lista de posts." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/createPost": {
+      "post": {
+        "tags": ["Post"],
+        "summary": "Criar um novo post",
+        "description": "Cria um novo post associado a um usuário e imagem.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NovoPost" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Post criado com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/updatePost/{id}": {
+      "put": {
+        "tags": ["Post"],
+        "summary": "Atualizar um post",
+        "description": "Atualiza os dados de um post.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do post a ser atualizado.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NovoPost" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Post atualizado com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/deletePost/{id}": {
+      "delete": {
+        "tags": ["Post"],
+        "summary": "Excluir um post",
+        "description": "Remove um post do sistema pelo seu ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do post a ser excluído.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Post excluído com sucesso." },
+          "404": { "description": "Post não encontrado." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/comentarios": {
     "get": {
       "tags": ["Comentários"],
       "summary": "Listar todos os comentários",
@@ -189,19 +321,19 @@
               }
             }
           }
-        },
-        "responses": {
-          "201": {
-            "description": "Comentário criado com sucesso.",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Comentario" }
-              }
-            }
-          },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
+      },
+      "responses": {
+        "201": {
+          "description": "Comentário criado com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Comentario" }
+            }
+          }
+        },
+        "400": { "$ref": "#/components/responses/ErroPadrao" },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
     }
   },
@@ -259,94 +391,27 @@
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Comentário atualizado com sucesso.",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Comentario" }
-              }
-            }
-          },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "404": {
-            "description": "Comentário não encontrado."
-          },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
+      },
+      "responses": {
+        "200": {
+          "description": "Comentário atualizado com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Comentario" }
+            }
+          }
+        },
+        "400": { "$ref": "#/components/responses/ErroPadrao" },
+        "404": {
+          "description": "Comentário não encontrado."
+        },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
     }
   },
-    "/imagens": {
-      "post": {
-        "tags": ["Imagem"],
-        "summary": "Adicionar uma nova imagem",
-        "description": "Adiciona uma nova imagem ao sistema.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/NovaImagem" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Imagem adicionada com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      },
-      "get": {
-        "tags": ["Imagem"],
-        "summary": "Listar todas as imagens",
-        "description": "Retorna todas as imagens cadastradas no sistema.",
-        "responses": {
-          "200": { "description": "Lista de imagens." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      }
-    },
-    "/imagens/{id}": {
-      "delete": {
-        "tags": ["Imagem"],
-        "summary": "Excluir uma imagem",
-        "description": "Remove uma imagem do sistema pelo seu ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID único da imagem a ser excluída.",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "204": { "description": "Imagem excluída com sucesso." },
-          "404": { "description": "Imagem não encontrada." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      }
-    },
+   
     "/galeria": {
-      "post": {
-        "tags": ["Galeria"],
-        "summary": "Adicionar imagem à galeria",
-        "description": "Adiciona uma imagem existente a uma galeria específica.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/AdicionarImagemGaleria" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Imagem adicionada à galeria com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      },
       "get": {
         "tags": ["Galeria"],
         "summary": "Listar imagens da galeria",
@@ -364,7 +429,26 @@
           "200": { "description": "Lista de imagens da galeria." },
           "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
+      },
+      "post": {
+        "tags": ["Galeria"],
+        "summary": "Adicionar imagem à galeria",
+        "description": "Adiciona uma imagem existente a uma galeria específica.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdicionarImagemGaleria" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Imagem adicionada à galeria com sucesso." },
+          "400": { "$ref": "#/components/responses/ErroPadrao" },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
       }
+     
     },
     "/galeria/{id}": {
       "delete": {
@@ -501,87 +585,7 @@
         }
       }
     },
-    "/post": {
-        "get": {
-          "tags": ["Post"],
-          "summary": "Listar todos os posts",
-          "description": "Retorna todos os posts cadastrados.",
-          "responses": {
-            "200": { "description": "Lista de posts." },
-            "500": { "$ref": "#/components/responses/ErroPadrao" }
-          }
-        }
-      },
-      "/createPost": {
-        "post": {
-          "tags": ["Post"],
-          "summary": "Criar um novo post",
-          "description": "Cria um novo post associado a um usuário e imagem.",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/NovoPost" }
-              }
-            }
-          },
-          "responses": {
-            "201": { "description": "Post criado com sucesso." },
-            "400": { "$ref": "#/components/responses/ErroPadrao" },
-            "500": { "$ref": "#/components/responses/ErroPadrao" }
-          }
-        }
-      },
-      "/updatePost/{id}": {
-        "put": {
-          "tags": ["Post"],
-          "summary": "Atualizar um post",
-          "description": "Atualiza os dados de um post.",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "description": "ID do post a ser atualizado.",
-              "schema": { "type": "string" }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/NovoPost" }
-              }
-            }
-          },
-          "responses": {
-            "200": { "description": "Post atualizado com sucesso." },
-            "400": { "$ref": "#/components/responses/ErroPadrao" },
-            "500": { "$ref": "#/components/responses/ErroPadrao" }
-          }
-        }
-      },
-      "/deletePost/{id}": {
-        "delete": {
-          "tags": ["Post"],
-          "summary": "Excluir um post",
-          "description": "Remove um post do sistema pelo seu ID.",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "description": "ID do post a ser excluído.",
-              "schema": { "type": "string" }
-            }
-          ],
-          "responses": {
-            "204": { "description": "Post excluído com sucesso." },
-            "404": { "description": "Post não encontrado." },
-            "500": { "$ref": "#/components/responses/ErroPadrao" }
-          }
-        }
-      },
+
       "/favoritos/{id}": {
   "get": {
     "tags": ["Post Favorito"],
@@ -734,7 +738,8 @@
       "NovaImagem": {
         "type": "object",
         "properties": {
-          "url": { "type": "string", "format": "uri" },
+          "titulo": { "type": "string" },
+          "url": { "type": "string"},
           "descricao": { "type": "string" }
         },
         "required": ["url"]
