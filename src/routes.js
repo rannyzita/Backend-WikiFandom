@@ -13,6 +13,8 @@ const routeAuth = require("./routes/authRoutes.js");
 
 const router = express.Router();
 
+router.patch('/login', authController.login);
+
 // As rotas devem ser funções, e não objetos
 const routes = [
     { name: 'Usuario', route: routeUsuario },
