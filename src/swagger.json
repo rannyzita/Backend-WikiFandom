@@ -692,6 +692,36 @@
         },
         "required": ["email", "senha"]
       },
+      "Comentario": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "conteudo": {
+          "type": "string",
+          "example": "Este é um ótimo post!"
+        },
+        "id_usuario": {
+          "type": "integer",
+          "example": 1
+        },
+        "id_post": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "ComentarioAtualizado": {
+      "type": "object",
+      "properties": {
+        "conteudo": {
+          "type": "string",
+          "example": "Novo conteúdo do comentário."
+        }
+      }
+    },
       "NovoComentario": {
         "type": "object",
         "properties": {
