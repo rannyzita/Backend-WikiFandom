@@ -30,22 +30,26 @@ class PostFavoritoController {
 
             res.status(200).json(PostFavorito);
             } catch (err) {
-                res.status(500).json({ error: + err.message });
+                res.status(500).json({ error: err.message });
+
             }
         }
-
         static async deletePostFavorito(req, res) {
             try {
-                const deletedFavorito = await FavoritoRepository.delete(req.body.id_usuario, req.body.id_post);
+                const { id } = req.params; 
+                
+                const deletedFavorito = await FavoritoRepository.delete(id);
+        
                 if (deletedFavorito) {
-                    res.status(204).send();
+                    return res.status(204).send();
                 } else {
-                    res.status(404).json({ message: 'Favorite not found' });
+                    return res.status(404).json({ message: 'Favorite not found' });
                 }
             } catch (err) {
-                res.status(500).json({ error: err.message });
+                return res.status(500).json({ error: err.message });
             }
         }
+        
 }
 
 module.exports = PostFavoritoController;

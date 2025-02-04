@@ -3,6 +3,11 @@
   "info": {
     "title": "API de WikiFandom",
     "description": "API para gerenciar funcionalidades de uma página de WikiFandom.",
+    "security": [
+    {
+      "bearerAuth": []
+    }
+    ],
     "termsOfService": "http://localhost:3333/terms",
     "contact": {
       "name": "Equipe WikiFandom",
@@ -58,11 +63,6 @@
     {
       "name": "Post Favorito",
       "description": "Gerenciamento de Posts Favoritos" 
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
     }
   ],
   "paths": {
@@ -151,7 +151,7 @@
       }
     }
   }
-},
+  },
 
     "/imagens": {
       "get": {
@@ -204,87 +204,90 @@
         }
       }
     },
-    "/post": {
-      "get": {
-        "tags": ["Post"],
-        "summary": "Listar todos os posts",
-        "description": "Retorna todos os posts cadastrados.",
-        "responses": {
-          "200": { "description": "Lista de posts." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
+    "/posts": {
+  "get": {
+    "tags": ["Post"],
+    "summary": "Listar todos os posts",
+    "description": "Retorna todos os posts cadastrados.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": { "description": "Lista de posts." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  },
+  "post": {
+    "tags": ["Post"],
+    "summary": "Criar um novo post",
+    "description": "Cria um novo post associado a um usuário e imagem.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": { "$ref": "#/components/schemas/NovoPost" }
         }
       }
     },
-    "/createPost": {
-      "post": {
-        "tags": ["Post"],
-        "summary": "Criar um novo post",
-        "description": "Cria um novo post associado a um usuário e imagem.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/NovoPost" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Post criado com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
+    "responses": {
+      "201": { "description": "Post criado com sucesso." },
+      "400": { "$ref": "#/components/responses/ErroPadrao" },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  }
+},
+"/posts/{id}": {
+  "put": {
+    "tags": ["Post"],
+    "summary": "Atualizar um post",
+    "description": "Atualiza os dados de um post.",
+    "security": [{ "bearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID do post a ser atualizado.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": { "$ref": "#/components/schemas/NovoPost" }
         }
       }
     },
-    "/updatePost/{id}": {
-      "put": {
-        "tags": ["Post"],
-        "summary": "Atualizar um post",
-        "description": "Atualiza os dados de um post.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID do post a ser atualizado.",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/NovoPost" }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "Post atualizado com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
+    "responses": {
+      "200": { "description": "Post atualizado com sucesso." },
+      "400": { "$ref": "#/components/responses/ErroPadrao" },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  },
+  "delete": {
+    "tags": ["Post"],
+    "summary": "Excluir um post",
+    "description": "Remove um post do sistema pelo seu ID.",
+    "security": [{ "bearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID do post a ser excluído.",
+        "schema": { "type": "string" }
       }
-    },
-    "/deletePost/{id}": {
-      "delete": {
-        "tags": ["Post"],
-        "summary": "Excluir um post",
-        "description": "Remove um post do sistema pelo seu ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID do post a ser excluído.",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "204": { "description": "Post excluído com sucesso." },
-          "404": { "description": "Post não encontrado." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      }
-    },
+    ],
+    "responses": {
+      "204": { "description": "Post excluído com sucesso." },
+      "404": { "description": "Post não encontrado." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  }
+},
     "/comentarios": {
     "get": {
       "tags": ["Comentários"],
@@ -416,111 +419,110 @@
       }
     }
   },
-   
-    "/galeria": {
-      "get": {
-        "tags": ["Galeria"],
-        "summary": "Listar imagens da galeria",
-        "description": "Retorna todas as imagens de uma galeria específica.",
-        "parameters": [
-          {
-            "name": "id_galeria",
-            "in": "query",
-            "required": true,
-            "description": "ID da galeria para listar as imagens.",
-            "schema": { "type": "string" }
+    "/galerias": {
+    "get": {
+      "tags": ["Galeria"],
+      "summary": "Listar imagens da galeria",
+      "description": "Retorna todas as imagens de uma galeria específica.",
+      
+      "responses": {
+        "200": { "description": "Lista de imagens da galeria." },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
+    },
+    "post": {
+      "tags": ["Galeria"],
+      "summary": "Adicionar imagem à galeria",
+      "description": "Adiciona uma imagem existente a uma galeria específica.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/AdicionarImagemGaleria" }
           }
-        ],
-        "responses": {
-          "200": { "description": "Lista de imagens da galeria." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       },
-      "post": {
-        "tags": ["Galeria"],
-        "summary": "Adicionar imagem à galeria",
-        "description": "Adiciona uma imagem existente a uma galeria específica.",
-        "requestBody": {
+      "responses": {
+        "201": { "description": "Imagem adicionada à galeria com sucesso." },
+        "400": { "$ref": "#/components/responses/ErroPadrao" },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
+    }
+  },
+  "/galerias/{id}": {
+    "delete": {
+      "tags": ["Galeria"],
+      "summary": "Excluir imagem da galeria",
+      "description": "Remove uma imagem da galeria pelo seu ID.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
           "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/AdicionarImagemGaleria" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Imagem adicionada à galeria com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
+          "description": "ID da imagem a ser removida da galeria.",
+          "schema": { "type": "string" }
         }
+      ],
+      "responses": {
+        "204": { "description": "Imagem removida da galeria com sucesso." },
+        "404": { "description": "Imagem não encontrada na galeria." },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
-     
-    },
-    "/galeria/{id}": {
-      "delete": {
-        "tags": ["Galeria"],
-        "summary": "Excluir imagem da galeria",
-        "description": "Remove uma imagem da galeria pelo seu ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID da imagem a ser removida da galeria.",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "204": { "description": "Imagem removida da galeria com sucesso." },
-          "404": { "description": "Imagem não encontrada na galeria." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
+    }
+  },  
+  "/historico": {
+    "get": {
+      "tags": ["Histórico de Pesquisa"],
+      "summary": "Listar histórico de pesquisa",
+      "description": "Retorna todo o histórico de pesquisa associado ao usuário autenticado.",
+      "responses": {
+        "200": { "description": "Lista de histórico de pesquisa." },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
     },
-    "/historico": {
-      "get": {
-        "tags": ["Histórico de Pesquisa"],
-        "summary": "Listar todo o histórico de pesquisa",
-        "description": "Retorna todo o histórico de pesquisa associado ao usuário autenticado.",
-        "responses": {
-          "200": {
-            "description": "Histórico de pesquisa retornado com sucesso.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HistoricoPesquisa"
-                  }
-                }
-              }
+    "post": {
+      "tags": ["Histórico de Pesquisa"],
+      "summary": "Criar histórico de pesquisa",
+      "description": "Cria um novo registro de histórico de pesquisa para o usuário.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HistoricoPesquisa"
             }
-          },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
+          }
         }
       },
-      "post": {
-        "tags": ["Histórico de Pesquisa"],
-        "summary": "Criar histórico de pesquisa",
-        "description": "Cria um novo registro de histórico de pesquisa para o usuário.",
-        "security": [{"bearerAuth": []}],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HistoricoPesquisa"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Histórico de pesquisa criado com sucesso." },
-          "400": { "$ref": "#/components/responses/ErroPadrao" },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
+      "responses": {
+        "201": { "description": "Histórico de pesquisa criado com sucesso." },
+        "400": { "$ref": "#/components/responses/ErroPadrao" },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
-    },
+    }
+  },
+  "/historico/{id}": {
+    "delete": {
+      "tags": ["Histórico de Pesquisa"],
+      "summary": "Excluir um item do histórico",
+      "description": "Remove um item do histórico de pesquisa pelo seu ID.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID do item do histórico a ser removido.",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "204": { "description": "Item do histórico removido com sucesso." },
+        "404": { "description": "Item do histórico não encontrado." },
+        "500": { "$ref": "#/components/responses/ErroPadrao" }
+      }
+    }
+  },
+
     "/noticias": {
       "get": {
         "tags": ["Notícias"],
@@ -552,25 +554,6 @@
       }
     },
     "/noticias/{id}": {
-      "get": {
-        "tags": ["Notícias"],
-        "summary": "Obter detalhes de uma notícia",
-        "description": "Retorna detalhes de uma notícia específica.",
-        "security": [{"bearerAuth": []}],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID único da notícia.",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": { "description": "Detalhes da notícia." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
-        }
-      },
       "delete": {
         "tags": ["Notícias"],
         "summary": "Excluir uma notícia",
@@ -592,79 +575,83 @@
       }
     },
 
-      "/favoritos/{id}": {
-  "get": {
+    "/favoritos/{id_usuario}": {
+      "get": {
+        "tags": ["Post Favorito"],
+        "summary": "Listar todos os favoritos de um usuário",
+        "description": "Retorna todos os favoritos de um usuário específico, identificado pelo ID do usuário.",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id_usuario",
+            "in": "path",
+            "required": true,
+            "description": "ID do usuário para listar seus favoritos",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Lista de favoritos do usuário." },
+          "404": { "description": "Favoritos não encontrados." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+    "/favoritos": {
+      "post": {
+        "tags": ["Post Favorito"],
+        "summary": "Criar um novo favorito",
+        "description": "Associa um post a um usuário, criando um novo favorito.",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_post": { "type": "string" },
+                  "id_usuario": { "type": "string" }
+                },
+                "required": ["id_post", "id_usuario"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Favorito criado com sucesso." },
+          "400": { "description": "Dados inválidos ou ausentes no corpo da requisição." },
+          "500": { "$ref": "#/components/responses/ErroPadrao" }
+        }
+      }
+    },
+  "/favoritos/{id}": {
+  "delete": {
     "tags": ["Post Favorito"],
-    "summary": "Listar todos os favoritos de um usuário",
-    "description": "Retorna todos os favoritos de um usuário específico, identificado pelo ID do usuário.",
+    "summary": "Excluir um favorito específico",
+    "description": "Remove um favorito específico de um usuário, identificado pelo ID do favorito.",
+    "security": [{"bearerAuth": []}],
     "parameters": [
       {
         "name": "id",
         "in": "path",
         "required": true,
-        "description": "ID do usuário para buscar seus favoritos.",
-        "schema": { "type": "string" }
+        "description": "ID do favorito",
+        "schema": {
+          "type": "string"
+        }
       }
     ],
     "responses": {
-      "200": { "description": "Lista de favoritos do usuário." },
-      "404": { "description": "Favoritos não encontrados." },
+      "204": { "description": "Favorito excluído com sucesso." },
+      "404": { "description": "Favorito não encontrado." },
       "500": { "$ref": "#/components/responses/ErroPadrao" }
     }
   }
 },
-  "/favoritos": {
-    "post": {
-      "tags": ["Post Favorito"],
-      "summary": "Criar um novo favorito",
-      "description": "Associa um post a um usuário, criando um novo favorito.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id_post": { "type": "string" },
-                "id_usuario": { "type": "string" }
-              },
-              "required": ["id_post", "id_usuario"]
-            }
-          }
-        }
-      },
-      "responses": {
-        "200": { "description": "Favorito criado com sucesso." },
-        "400": { "description": "Dados inválidos ou ausentes no corpo da requisição." },
-        "500": { "$ref": "#/components/responses/ErroPadrao" }
-      }
-    },
-    "delete": {
-      "tags": ["Post Favorito"],
-      "summary": "Excluir um favorito",
-      "description": "Remove um favorito específico de um usuário.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id_post": { "type": "string" },
-                "id_usuario": { "type": "string" }
-              },
-              "required": ["id_post", "id_usuario"]
-            }
-          }
-        }
-      },
-      "responses": {
-        "204": { "description": "Favorito excluído com sucesso." },
-        "404": { "description": "Favorito não encontrado." },
-        "500": { "$ref": "#/components/responses/ErroPadrao" }
-      }
-    }
-  },
+
   "components": {
     "responses": {
       "ErroPadrao": {
@@ -684,25 +671,25 @@
   }  
   },    
   "components": {
-    "schemas": {
-      "RegistroUsuario": {
-        "type": "object",
-        "properties": {
-          "nome": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "senha": { "type": "string", "minLength": 6 }
-        },
-        "required": ["nome", "email", "senha"]
+  "schemas": {
+    "RegistroUsuario": {
+      "type": "object",
+      "properties": {
+        "nome": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "senha": { "type": "string", "minLength": 8 }
       },
-      "LoginUsuario": {
-        "type": "object",
-        "properties": {
-          "email": { "type": "string", "format": "email" },
-          "senha": { "type": "string", "minLength": 6 }
-        },
-        "required": ["email", "senha"]
+      "required": ["nome", "email", "senha"]
+    },
+    "LoginUsuario": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "senha": { "type": "string", "minLength": 8 }
       },
-      "Comentario": {
+      "required": ["email", "senha"]
+    },
+    "Comentario": {
       "type": "object",
       "properties": {
         "id": {
@@ -732,72 +719,81 @@
         }
       }
     },
-      "NovoComentario": {
-        "type": "object",
-        "properties": {
-          "texto": { "type": "string" },
-          "usuario_id": { "type": "integer" },
-          "post_id": { "type": "integer" }
-        },
-        "required": ["texto", "usuario_id", "post_id"]
+    "NovoComentario": {
+      "type": "object",
+      "properties": {
+        "texto": { "type": "string" },
+        "usuario_id": { "type": "integer" },
+        "post_id": { "type": "integer" }
       },
-      "NovaImagem": {
-        "type": "object",
-        "properties": {
-          "titulo": { "type": "string" },
-          "url": { "type": "string"},
-          "categoria": { "type": "string" }
-        },
-        "required": ["url"]
-      },
-      "AdicionarImagemGaleria": {
-        "type": "object",
-        "properties": {
-          "imagem_id": { "type": "string" },
-          "galeria_id": { "type": "string" }
-        },
-        "required": ["imagem_id", "galeria_id"]
-      },
-      "HistoricoPesquisa": {
-        "type": "object",
-        "properties": {
-          "usuario_id": { "type": "string" },
-          "pesquisa": { "type": "string" },
-          "data": { "type": "string", "format": "date-time" }
-        },
-        "required": ["usuario_id", "pesquisa", "data"]
-      },
-      "NovaNoticia": {
-        "type": "object",
-        "properties": {
-          "titulo": { "type": "string" },
-          "conteudo": { "type": "string" },
-          "data_publicacao": { "type": "string", "format": "date-time" }
-        },
-        "required": ["titulo", "conteudo", "data_publicacao"]
-      },
-      "NovoPost": {
-        "type": "object",
-        "properties": {
-          "titulo": { "type": "string" },
-          "descricao": { "type": "string" },
-          "usuarioId": { "type": "string" },
-          "imagemId": { "type": "string" }
-        },
-        "required": ["titulo", "descricao", "usuarioId", "imagemId"]
-      },
-      "PostFavoritos":{
-        "type": "object",
-        "properties": {
-          "id_post": { "type": "string" },
-          "id_usuario": { "type": "string" }
-        },
-        "required": ["id_post", "id_usuario"]
-      }
+      "required": ["texto", "usuario_id", "post_id"]
     },
-    "responses": {
-      "ErroPadrao": {
-        "description": "Erro geral do sistema."
+    "NovaImagem": {
+      "type": "object",
+      "properties": {
+        "titulo": { "type": "string" },
+        "url_post": { "type": "string" },
+        "categoria": { "type": "string" }
+      },
+      "required": ["url"]
+    },
+    "AdicionarImagemGaleria": {
+      "type": "object",
+      "properties": {
+        "id_imagem": { "type": "string" },
+        "descricao": { "type": "string" }
+      },
+      "required": ["id_imagem", "decricao"]
+    },
+    "HistoricoPesquisa": {
+      "type": "object",
+      "properties": {
+        "id_usuario": { "type": "string" },
+        "termo_buscado": { "type": "string" },
+        "data_busca": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id_usuario", "termo_buscado", "data_busca"]
+    },
+    "NovaNoticia": {
+      "type": "object",
+      "properties": {
+        "titulo": { "type": "string" },
+        "conteudo": { "type": "string" },
+        "url_noticia": { "type": "string"}
+      },
+      "required": ["titulo", "conteudo", "url_noticia"]
+    },
+    "NovoPost": {
+      "type": "object",
+      "properties": {
+        "titulo": { "type": "string" },
+        "conteudo": { "type": "string" },
+        "id_usuario": { "type": "string" },
+        "id_imagem": { "type": "string" }
+      },
+      "required": ["titulo", "conteudo", "id_usuario", "id_imagem"]
+    },
+    "PostFavoritos": {
+      "type": "object",
+      "properties": {
+        "id_post": { "type": "string" },
+        "id_usuario": { "type": "string" }
+      },
+      "required": ["id_post", "id_usuario"]
+    }
+  },
+  "responses": {
+    "ErroPadrao": {
+      "description": "Erro inesperado no servidor.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": { "type": "string" }
+            }
+          }
+        }
       }
     }
   },
@@ -808,4 +804,5 @@
       "bearerFormat": "JWT"
     }
   }
+}
 }

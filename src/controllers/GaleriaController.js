@@ -21,7 +21,7 @@ class GaleriaController{
             }
             
             const imagemExistente = await GaleriaRepository.findById(id_imagem); 
-            if (imagemExistente) {
+            if (!imagemExistente) {
                 const adicionadaNaGaleria = await GaleriaRepository.adicionarImagemNaGaleria(id_imagem, descricao); 
                 res.status(200).json({ message: 'Imagem adicionada à galeria com sucesso.' });
                 if (!adicionadaNaGaleria) {

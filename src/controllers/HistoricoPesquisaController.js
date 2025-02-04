@@ -3,18 +3,12 @@ const { v4: uuidv4 } = require('uuid');
 
 class HistoricoPesquisaController{
     // Verificar todo o histórico do usuario
-    static async getAllHistorico(req, res){
-        try{
-            const userId = req.params.id;
-
-            if(!userId){
-                return res.status(400).json({message: 'ID do usuario é obrigatório.'});
-            }
-
-            const historico = await HistoricoPesquisaRepository.findAllByUserId(userId);
+    static async getAllHistorico(req, res) {
+        try {
+            const historico = await HistoricoPesquisaRepository.findAll(); 
             res.json(historico);
-        } catch(erro){
-            return res.status(500).json({message: 'Erro ao verificar histórico.', erro})
+        } catch (erro) {
+            return res.status(500).json({ message: 'Erro ao verificar histórico.', erro });
         }
     }
 
