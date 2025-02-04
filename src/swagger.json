@@ -184,26 +184,61 @@
       
     },
     "/imagens/{id}": {
-      "delete": {
-        "tags": ["Imagem"],
-        "summary": "Excluir uma imagem",
-        "description": "Remove uma imagem do sistema pelo seu ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID único da imagem a ser excluída.",
-            "schema": { "type": "string" }
+  "put": {
+    "tags": ["Imagem"],
+    "summary": "Atualizar uma imagem",
+    "description": "Atualiza os dados de uma imagem existente no sistema.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID único da imagem a ser atualizada.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "titulo": { "type": "string" },
+              "url_post": { "type": "string" },
+              "categoria": { "type": "string" }
+            }
           }
-        ],
-        "responses": {
-          "204": { "description": "Imagem excluída com sucesso." },
-          "404": { "description": "Imagem não encontrada." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       }
     },
+    "responses": {
+      "200": { "description": "Imagem atualizada com sucesso." },
+      "400": { "$ref": "#/components/responses/ErroPadrao" },
+      "404": { "description": "Imagem não encontrada." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  },
+  "delete": {
+    "tags": ["Imagem"],
+    "summary": "Excluir uma imagem",
+    "description": "Remove uma imagem do sistema pelo seu ID.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID único da imagem a ser excluída.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "204": { "description": "Imagem excluída com sucesso." },
+      "404": { "description": "Imagem não encontrada." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  }
+},
     "/posts": {
   "get": {
     "tags": ["Post"],
@@ -553,27 +588,63 @@
         }
       }
     },
-    "/noticias/{id}": {
-      "delete": {
-        "tags": ["Notícias"],
-        "summary": "Excluir uma notícia",
-        "description": "Remove uma notícia pelo ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "ID único da notícia a ser excluída.",
-            "schema": { "type": "string" }
+   "/noticias/{id}": {
+  "put": {
+    "tags": ["Notícias"],
+    "summary": "Atualizar uma notícia",
+    "description": "Atualiza os dados de uma notícia existente no sistema.",
+    "security": [{"bearerAuth": []}],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID único da notícia a ser atualizada.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "titulo": { "type": "string" },
+              "conteudo": { "type": "string" },
+              "url_noticia": { "type": "string" }
+            }
           }
-        ],
-        "responses": {
-          "204": { "description": "Notícia excluída com sucesso." },
-          "404": { "description": "Notícia não encontrada." },
-          "500": { "$ref": "#/components/responses/ErroPadrao" }
         }
       }
     },
+    "responses": {
+      "200": { "description": "Notícia atualizada com sucesso." },
+      "400": { "$ref": "#/components/responses/ErroPadrao" },
+      "404": { "description": "Notícia não encontrada." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  },
+  "delete": {
+    "tags": ["Notícias"],
+    "summary": "Excluir uma notícia",
+    "description": "Remove uma notícia pelo ID.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID único da notícia a ser excluída.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "204": { "description": "Notícia excluída com sucesso." },
+      "404": { "description": "Notícia não encontrada." },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  }
+},
 
     "/favoritos/{id_usuario}": {
       "get": {
