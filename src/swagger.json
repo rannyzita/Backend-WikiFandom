@@ -66,94 +66,168 @@
     }
   ],
   "paths": {
-    "/registro": {
-      "post": {
-        "tags": ["Usuários"],
-        "summary": "Registro de Usuário",
-        "description": "Registra um novo usuário no sistema.",
-        "security": [{"bearerAuth": []}],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/RegistroUsuario" }
+    
+        "/registro": {
+          "post": {
+            "tags": ["Usuários"],
+            "summary": "Registro de Usuário",
+            "description": "Registra um novo usuário no sistema.",
+            "security": [{"bearerAuth": []}],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/RegistroUsuario" }
+                },
+                "examples": {
+                  "registro": {
+                    "value": {
+                      "nome": "Arthur",
+                      "email": "arthur@gmail.com",
+                      "senha": "123456"
+                    }
+                  }
+                }
+              }
             },
-            "examples": {
-              "registro": {
-                "value" :{
-                  "nome": "Arthur",
-                  "email": "arthur@gmail.com",
-                  "senha": "123456"
+            "responses": {
+              "400": { 
+                "description": "Um ou mais campos estão inválidos ou Usuário já existe." 
+              },
+              "500": {
+                "description": "Erro ao registrar usuário." 
+              },
+              "201": {
+                "description": "Usuário registrado com sucesso.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/RegistroUsuario"
+                    }
+                  }
                 }
               }
             }
           }
         },
-        "responses": {
-          "400": { 
-            "description": "Um ou mais campos estão inválidos ou Usuário já existe." 
-          },
-          "500": {
-            "description": "Erro ao registrar usuário." 
-           },
-          "201": {
-            "description": "Usuário registrado com sucesso." ,
-            "content": {
-              "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/RegistroUsuario"
+        "/login": {
+          "patch": {
+            "tags": ["Usuários"],
+            "summary": "Login de Usuário",
+            "description": "Realiza o login de um usuário e retorna um token JWT.",
+            "security": [{"bearerAuth": []}],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/LoginUsuario" },
+                  "examples": {
+                    "registro": {
+                      "value": {
+                        "email": "arthur@gmail.com",
+                        "senha": "123456"
+                      }
+                    }
+                  }
+                }
               }
+            },
+            "responses": {
+              "400": { "description": "Email e senha são obrigatórios." },
+              "401": { "description": "Credenciais inválidas." },
+              "500": { "description": "Erro ao realizar login." },
+              "200": {
+                "description": "Login bem-sucedido, retorna um token JWT.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "token": { "type": "string" }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
-        } 
-      }
-    },
-    "/login": {
-  "patch": {
-    "tags": ["Usuários"],
-    "summary": "Login de Usuário",
-    "description": "Realiza o login de um usuário e retorna um token JWT.",
-    "security": [{"bearerAuth": []}],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": { "$ref": "#/components/schemas/LoginUsuario" }
         },
-        "examples": {
-          "registro": {
-            "value" :{
-              "email": "arthur@gmail.com",
-              "senha": "123456"
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "400": { "description": "Email e senha são obrigatórios." },
-      "401": { "description": "Credenciais inválidas." },
-      "500": { "description": "Erro ao realizar login." },
-      "200": {
-        "description": "Login bem-sucedido, retorna um token JWT.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "token": { "type": "string" }
+        "/usuarios/{id}": {
+          "get": {
+            "tags": ["Usuários"],
+            "summary": "Buscar usuário por ID",
+            "description": "Retorna os dados de um usuário pelo ID.",
+            "security": [{"bearerAuth": []}],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
               }
+            ],
+            "responses": {
+              "200": {
+                "description": "Usuário encontrado.",
+                "content": {
+                  "application/json": {
+                    "schema": { "$ref": "#/components/schemas/RegistroUsuario" }
+                  }
+                }
+              },
+              "404": { "description": "Usuário não encontrado." },
+              "500": { "description": "Erro ao buscar usuário." }
+            }
+          },
+          "put": {
+            "tags": ["Usuários"],
+            "summary": "Atualizar usuário",
+            "description": "Atualiza os dados de um usuário pelo ID.",
+            "security": [{"bearerAuth": []}],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/UsuarioUpdate" }
+                }
+              }
+            },
+            "responses": {
+              "200": { "description": "Usuário atualizado com sucesso." },
+              "404": { "description": "Usuário não encontrado." },
+              "500": { "description": "Erro ao atualizar usuário." }
+            }
+          },
+          "delete": {
+            "tags": ["Usuários"],
+            "summary": "Deletar usuário",
+            "description": "Remove um usuário pelo ID.",
+            "security": [{"bearerAuth": []}],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
+              }
+            ],
+            "responses": {
+              "204": { "description": "Usuário deletado com sucesso." },
+              "404": { "description": "Usuário não encontrado." },
+              "500": { "description": "Erro ao deletar usuário." }
             }
           }
-        }
-      }
-    }
-  }
-  },
-
-    "/imagens": {
+        },
+       "/imagens": {
       "get": {
         "tags": ["Imagem"],
         "summary": "Listar todas as imagens",
@@ -182,8 +256,38 @@
         }
       }
       
-    },
-    "/imagens/{id}": {
+        },
+       "/imagens/{id}": {
+  "get": {
+    "tags": ["Imagem"],
+    "summary": "Obter uma imagem por ID",
+    "description": "Retorna uma imagem específica com base no ID fornecido.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID único da imagem a ser retornada.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Imagem encontrada.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Imagem" }
+          }
+        }
+      },
+      "404": {
+        "description": "Imagem não encontrada."
+      },
+      "500": {
+        "$ref": "#/components/responses/ErroPadrao"
+      }
+    }
+  },
   "put": {
     "tags": ["Imagem"],
     "summary": "Atualizar uma imagem",
@@ -238,8 +342,8 @@
       "500": { "$ref": "#/components/responses/ErroPadrao" }
     }
   }
-},
-    "/posts": {
+        },
+      "/posts": {
   "get": {
     "tags": ["Post"],
     "summary": "Listar todos os posts",
@@ -272,8 +376,43 @@
       "500": { "$ref": "#/components/responses/ErroPadrao" }
     }
   }
-},
-"/posts/{id}": {
+        },
+        "/posts/{id}": {
+  "get": {
+    "tags": ["Post"],
+    "summary": "Obter um post por ID",
+    "description": "Retorna um post específico com base no ID fornecido.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID do post a ser retornado.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Post encontrado.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Post" }
+          }
+        }
+      },
+      "404": {
+        "description": "Post não encontrado."
+      },
+      "500": {
+        "$ref": "#/components/responses/ErroPadrao"
+      }
+    }
+  },
   "put": {
     "tags": ["Post"],
     "summary": "Atualizar um post",
@@ -322,7 +461,7 @@
       "500": { "$ref": "#/components/responses/ErroPadrao" }
     }
   }
-},
+        },
     "/comentarios": {
     "get": {
       "tags": ["Comentários"],
@@ -381,79 +520,124 @@
       }
     }
   },
-  "/comentarios/{id}": {
-    "delete": {
-      "tags": ["Comentários"],
-      "summary": "Excluir um comentário",
-      "description": "Exclui um comentário pelo seu ID.",
-      "security": [{"bearerAuth": []}],
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "ID único do comentário a ser excluído.",
-          "schema": { "type": "string" }
+  "/comentarios/{id_post}": {
+   "get": {
+  "tags": ["Comentários"],
+  "summary": "Listar comentários por ID de post",
+  "description": "Retorna todos os comentários associados a um post específico, dado o ID do post.",
+  "parameters": [
+    {
+      "name": "id_post",
+      "in": "path",
+      "required": true,
+      "description": "ID do post para buscar os comentários.",
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Lista de comentários do post.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Comentario"
+            }
+          }
         }
-      ],
-      "responses": {
-        "204": {
-          "description": "Comentário excluído com sucesso."
-        },
-        "404": {
-          "description": "Comentário não encontrado."
-        },
-        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
     },
-    "put": {
-      "tags": ["Comentários"],
-      "summary": "Atualizar um comentário",
-      "description": "Atualiza o conteúdo de um comentário pelo seu ID.",
-      "security": [{"bearerAuth": []}],
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "ID único do comentário a ser atualizado.",
-          "schema": { "type": "string" }
-        }
-      ],
-      "requestBody": {
+    "404": {
+      "description": "Nenhum comentário encontrado para este post."
+    },
+    "500": {
+      "$ref": "#/components/responses/ErroPadrao"
+    }
+  }
+}
+  },
+
+  "/comentarios/{id}": {
+  "delete": {
+    "tags": ["Comentários"],
+    "summary": "Excluir um comentário",
+    "description": "Exclui um comentário pelo seu ID.",
+    "security": [{"bearerAuth": []}],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
         "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ComentarioAtualizado"
-            },
-            "examples": {
-              "comentarioAtualizado": {
-                "value": {
-                  "conteudo": "Novo conteúdo do comentário."
-                }
+        "description": "ID único do comentário a ser excluído.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "Comentário excluído com sucesso."
+      },
+      "404": {
+        "description": "Comentário não encontrado."
+      },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
+    }
+  },
+  "put": {
+    "tags": ["Comentários"],
+    "summary": "Atualizar um comentário",
+    "description": "Atualiza o conteúdo de um comentário pelo seu ID.",
+    "security": [{"bearerAuth": []}],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID único do comentário a ser atualizado.",
+        "schema": { "type": "string" }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ComentarioAtualizado"
+          },
+          "examples": {
+            "comentarioAtualizado": {
+              "value": {
+                "conteudo": "Novo conteúdo do comentário."
               }
             }
           }
         }
-      },
-      "responses": {
-        "200": {
-          "description": "Comentário atualizado com sucesso.",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Comentario" }
-            }
-          }
-        },
-        "400": { "$ref": "#/components/responses/ErroPadrao" },
-        "404": {
-          "description": "Comentário não encontrado."
-        },
-        "500": { "$ref": "#/components/responses/ErroPadrao" }
       }
+    },
+    "responses": {
+      "200": {
+        "description": "Comentário atualizado com sucesso.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Comentario" }
+          }
+        }
+      },
+      "400": { "$ref": "#/components/responses/ErroPadrao" },
+      "404": {
+        "description": "Comentário não encontrado."
+      },
+      "500": { "$ref": "#/components/responses/ErroPadrao" }
     }
-  },
+  }
+},
     "/galerias": {
     "get": {
       "tags": ["Galeria"],
@@ -741,139 +925,146 @@
     }
   }  
   },    
-  "components": {
-  "schemas": {
-    "RegistroUsuario": {
-      "type": "object",
-      "properties": {
-        "nome": { "type": "string" },
-        "email": { "type": "string", "format": "email" },
-        "senha": { "type": "string", "minLength": 8 }
-      },
-      "required": ["nome", "email", "senha"]
-    },
-    "LoginUsuario": {
-      "type": "object",
-      "properties": {
-        "email": { "type": "string", "format": "email" },
-        "senha": { "type": "string", "minLength": 8 }
-      },
-      "required": ["email", "senha"]
-    },
-    "Comentario": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "example": 1
+    "components": {
+      "schemas": {
+        "RegistroUsuario": {
+          "type": "object",
+          "properties": {
+            "nome": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "senha": { "type": "string", "minLength": 8 }
+          },
+          "required": ["nome", "email", "senha"]
         },
-        "conteudo": {
-          "type": "string",
-          "example": "Este é um ótimo post!"
+        "LoginUsuario": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string", "format": "email" },
+            "senha": { "type": "string", "minLength": 8 }
+          },
+          "required": ["email", "senha"]
         },
-        "id_usuario": {
-          "type": "integer",
-          "example": 1
+        "UsuarioUpdate": {
+          "type": "object",
+          "properties": {
+            "nome": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "senha": { "type": "string", "format": "password" }
+          }
         },
-        "id_post": {
-          "type": "integer",
-          "example": 1
+        "Comentario": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "integer", "example": 1 },
+            "conteudo": { "type": "string", "example": "Este é um ótimo post!" },
+            "id_usuario": { "type": "integer", "example": 1 },
+            "id_post": { "type": "integer", "example": 1 }
+          }
+        },
+        "ComentarioAtualizado": {
+          "type": "object",
+          "properties": {
+            "conteudo": { "type": "string", "example": "Novo conteúdo do comentário." }
+          }
+        },
+        "NovoComentario": {
+          "type": "object",
+          "properties": {
+            "texto": { "type": "string" },
+            "usuario_id": { "type": "integer" },
+            "post_id": { "type": "integer" }
+          },
+          "required": ["texto", "usuario_id", "post_id"]
+        },
+        "NovaImagem": {
+          "type": "object",
+          "properties": {
+            "titulo": { "type": "string" },
+            "url_post": { "type": "string" },
+            "categoria": { "type": "string" }
+          },
+          "required": ["url_post"]
+        },
+        "AdicionarImagemGaleria": {
+          "type": "object",
+          "properties": {
+            "id_imagem": { "type": "string" },
+            "descricao": { "type": "string" }
+          },
+          "required": ["id_imagem", "descricao"]
+        },
+        "HistoricoPesquisa": {
+          "type": "object",
+          "properties": {
+            "id_usuario": { "type": "string" },
+            "termo_buscado": { "type": "string" },
+            "data_busca": { "type": "string", "format": "date-time" }
+          },
+          "required": ["id_usuario", "termo_buscado", "data_busca"]
+        },
+        "NovaNoticia": {
+          "type": "object",
+          "properties": {
+            "titulo": { "type": "string" },
+            "conteudo": { "type": "string" },
+            "url_noticia": { "type": "string" }
+          },
+          "required": ["titulo", "conteudo", "url_noticia"]
+        },
+        "NovoPost": {
+          "type": "object",
+          "properties": {
+            "titulo": { "type": "string" },
+            "conteudo": { "type": "string" },
+            "id_usuario": { "type": "string" },
+            "id_imagem": { "type": "string" }
+          },
+          "required": ["titulo", "conteudo", "id_usuario", "id_imagem"]
+        },
+        
+        "Post": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "titulo": { "type": "string" },
+            "conteudo": { "type": "string" },
+            "data_criacao": { "type": "string", "format": "date-time" },
+            "id_usuario": { "type": "string" },
+            "id_imagem": { "type": "string" }
+          },
+          "required": ["id", "titulo", "conteudo", "data_criacao", "id_usuario", "id_imagem"]
+        },
+        "PostFavoritos": {
+          "type": "object",
+          "properties": {
+            "id_post": { "type": "string" },
+            "id_usuario": { "type": "string" }
+          },
+          "required": ["id_post", "id_usuario"]
         }
-      }
-    },
-    "ComentarioAtualizado": {
-      "type": "object",
-      "properties": {
-        "conteudo": {
-          "type": "string",
-          "example": "Novo conteúdo do comentário."
-        }
-      }
-    },
-    "NovoComentario": {
-      "type": "object",
-      "properties": {
-        "texto": { "type": "string" },
-        "usuario_id": { "type": "integer" },
-        "post_id": { "type": "integer" }
       },
-      "required": ["texto", "usuario_id", "post_id"]
-    },
-    "NovaImagem": {
-      "type": "object",
-      "properties": {
-        "titulo": { "type": "string" },
-        "url_post": { "type": "string" },
-        "categoria": { "type": "string" }
-      },
-      "required": ["url"]
-    },
-    "AdicionarImagemGaleria": {
-      "type": "object",
-      "properties": {
-        "id_imagem": { "type": "string" },
-        "descricao": { "type": "string" }
-      },
-      "required": ["id_imagem", "decricao"]
-    },
-    "HistoricoPesquisa": {
-      "type": "object",
-      "properties": {
-        "id_usuario": { "type": "string" },
-        "termo_buscado": { "type": "string" },
-        "data_busca": { "type": "string", "format": "date-time" }
-      },
-      "required": ["id_usuario", "termo_buscado", "data_busca"]
-    },
-    "NovaNoticia": {
-      "type": "object",
-      "properties": {
-        "titulo": { "type": "string" },
-        "conteudo": { "type": "string" },
-        "url_noticia": { "type": "string"}
-      },
-      "required": ["titulo", "conteudo", "url_noticia"]
-    },
-    "NovoPost": {
-      "type": "object",
-      "properties": {
-        "titulo": { "type": "string" },
-        "conteudo": { "type": "string" },
-        "id_usuario": { "type": "string" },
-        "id_imagem": { "type": "string" }
-      },
-      "required": ["titulo", "conteudo", "id_usuario", "id_imagem"]
-    },
-    "PostFavoritos": {
-      "type": "object",
-      "properties": {
-        "id_post": { "type": "string" },
-        "id_usuario": { "type": "string" }
-      },
-      "required": ["id_post", "id_usuario"]
-    }
-  },
-  "responses": {
-    "ErroPadrao": {
-      "description": "Erro inesperado no servidor.",
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": { "type": "string" }
+      "responses": {
+        "ErroPadrao": {
+          "description": "Erro inesperado no servidor.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": { "type": "string" }
+                }
+              }
             }
           }
         }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
       }
     }
-  },
-  "securitySchemes": {
-    "bearerAuth": {
-      "type": "http",
-      "scheme": "bearer",
-      "bearerFormat": "JWT"
-    }
   }
-}
-}
+  
