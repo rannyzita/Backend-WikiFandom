@@ -11,7 +11,14 @@ const swaggerDocument = require('./swagger.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: '*',    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], 
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Length', 'X-Response-Time'], 
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204 
+}));
 
 app.use(routes);
 
