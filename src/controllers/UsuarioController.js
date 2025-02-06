@@ -30,7 +30,7 @@ static async getUsuarioById(req, res) {
 
   // Método para criar um novo usuário
 static async createUsuario(req, res) {
-
+    console.log("Chegou até aqui");
     const { nome } = req.body;
 
     if (!nome || typeof nome !== 'string') {

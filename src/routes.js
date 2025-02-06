@@ -1,6 +1,6 @@
 const express = require('express');
 
-const authController = require("./controllers/AuthController.js");
+const authController = require("./controllers/authController.js");
 const routeUsuario = require("./routes/UsuarioRoute.js");
 const routeHistorico = require("./routes/HistoricoRoute.js");
 const routeImagem = require("./routes/ImagemRoute.js");
