@@ -1017,9 +1017,10 @@
             "titulo": { "type": "string" },
             "conteudo": { "type": "string" },
             "id_usuario": { "type": "string" },
-            "id_imagem": { "type": "string" }
+            "id_imagem": { "type": "string" },
+            "categoria": { "type": "string" }
           },
-          "required": ["titulo", "conteudo", "id_usuario", "id_imagem"]
+          "required": ["titulo", "conteudo", "id_usuario", "id_imagem", "categoria"]
         },
         
         "Post": {
