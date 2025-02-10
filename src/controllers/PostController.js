@@ -32,12 +32,12 @@ class PostController {
     // Método para adicionar um novo post
     static async createPost(req, res) {
         try {
-        const { id_usuario, titulo, conteudo, id_imagem } = req.body;
+        const { id_usuario, titulo, conteudo, id_imagem, categoria} = req.body;
         const id = uuidv4();
 
         const usuario = await UsuarioRepository.findById(id_usuario);
 
-        if (!usuario ||  usuario != "Admin2025") {
+        if (!usuario && id_usuario !== "Admin2025") {
             res.status(404).json({ message: "Usuário não encontrado." });
             return;
         }
@@ -54,7 +54,7 @@ class PostController {
             return;
         }
 
-        const post = await PostRepository.create({ id, id_usuario, titulo, conteudo, id_imagem });
+        const post = await PostRepository.create({ id, id_usuario, titulo, conteudo, id_imagem, categoria });
 
         res.status(201).json(post);
         } catch (err) {
