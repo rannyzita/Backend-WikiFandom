@@ -84,7 +84,9 @@
                     "value": {
                       "nome": "Arthur",
                       "email": "arthur@gmail.com",
-                      "senha": "123456"
+                      "senha": "123456",
+                      "foto_perfil": "https://example.com/imagem.jpg",
+                      "biografia": "Meu nome é Arthur, tenho 21 anos e gosto de programar."
                     }
                   }
                 }
@@ -932,9 +934,11 @@
           "properties": {
             "nome": { "type": "string" },
             "email": { "type": "string", "format": "email" },
-            "senha": { "type": "string", "minLength": 8 }
+            "senha": { "type": "string", "minLength": 8 },
+            "foto_perfil": { "type": "string"},
+            "biografia": { "type": "string" }
           },
-          "required": ["nome", "email", "senha"]
+          "required": ["nome", "email", "senha", "foto_perfil", "biografia"]
         },
         "LoginUsuario": {
           "type": "object",
@@ -949,7 +953,9 @@
           "properties": {
             "nome": { "type": "string" },
             "email": { "type": "string", "format": "email" },
-            "senha": { "type": "string", "format": "password" }
+            "senha": { "type": "string", "format": "password" },
+            "foto_perfil": { "type": "string"},
+            "biografia": { "type": "string" }
           }
         },
         "Comentario": {
