@@ -37,7 +37,7 @@ class PostController {
 
         const usuario = await UsuarioRepository.findById(id_usuario);
 
-        if (!usuario) {
+        if (!usuario ||  usuario != "Admin2025") {
             res.status(404).json({ message: "Usuário não encontrado." });
             return;
         }
