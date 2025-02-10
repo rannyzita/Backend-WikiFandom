@@ -5,6 +5,8 @@ const knex = require('./db/connection.js');
 require('dotenv').config();
 const app = express();
 
+// -- tem que adicionar os cookies pq se nao na parte do front nao vai dar acesso na hora de acessar a porta --
+// fora q no front a porta que tá usando é 5730 por aí
 const corsConfig = {
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], 
