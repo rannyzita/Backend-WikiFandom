@@ -65,7 +65,7 @@ class AuthController{
             );
 
             // se as credenciais forem válidas, gera um token JWT assinado com o segredo configurado
-            return res.json({token});
+            return res.json({token,userId:usuario.id});
         
         } catch (erro){
             console.error('Erro ao realizar login:', erro);  // logar os erros no console para melhor diagnóstico

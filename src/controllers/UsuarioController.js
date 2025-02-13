@@ -28,25 +28,25 @@ static async getUsuarioById(req, res) {
     }
 }
 
-  // Método para criar um novo usuário
-static async createUsuario(req, res) {
-    console.log("Chegou até aqui");
-    const { nome } = req.body;
+    // Método para criar um novo usuário
+    static async createUsuario(req, res) {
+        console.log("Chegou até aqui");
+        const { nome } = req.body;
 
-    if (!nome || typeof nome !== 'string') {
-        return res.status(400).json({ message: 'nome deve ser string.' });
+        if (!nome || typeof nome !== 'string') {
+            return res.status(400).json({ message: 'nome deve ser string.' });
+        }
+
+        const id = uuidv4();
+
+        try {
+            const newUsuario = await UsuarioRepository.create(id, req.body);
+            // status usado para indicar que algum recurso foi criado com sucesso
+            res.status(201).json(newUsuario);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     }
-
-    const id = uuidv4();
-
-    try {
-        const newUsuario = await UsuarioRepository.create(id, req.body);
-        // status usado para indicar que algum recurso foi criado com sucesso
-        res.status(201).json(newUsuario);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
 
   // Método para atualizar um usuário
 static async updateUsuario(req, res) {
