@@ -19,7 +19,7 @@ const corsConfig = {
 //docs api
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors(corsConfig));
 
@@ -30,6 +30,6 @@ app.use(routes);
 
 // Iniciar o servidor
 const PORT = 3333;
-app.listen(PORT, () => {
+app.listen(PORT, process.env.HOST || '0.0.0.0',() => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
