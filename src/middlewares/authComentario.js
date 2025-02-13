@@ -26,7 +26,6 @@ const authComentario = async (req, res, next) => {
         return res.status(404).json({ message: 'Comentário não encontrado' });
     }
 
-    // Check if the user is authorized to update or delete the comment
     if (comentario.id_usuario !== req.user.id) {  
         return res.status(403).json({ message: 'Sem autorização para atualizar ou excluir.' });
     }
